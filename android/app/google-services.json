@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "551002011220",
+    "project_id": "aichat-2ebda",
+    "storage_bucket": "aichat-2ebda.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:551002011220:android:618e66ac31023a3f8d9fc1",
+        "android_client_info": {
+          "package_name": "com.example.ai_chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3WKxPt5AwAi-NYe-3QhZ3lARDaW7oWMA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

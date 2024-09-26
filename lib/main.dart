@@ -1,6 +1,16 @@
+import 'package:ai_chat/configs/firebase_options.dart';
+import 'package:ai_chat/screens/auth/sign_in/view/sign_in_screen.dart';
+import 'package:ai_chat/screens/auth/sign_up/view/sign_up.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'core/ui/theme/theme.dart';
+
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -10,12 +20,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: Container(),
+      debugShowCheckedModeBanner: false,
+      title: 'AI Chat',
+      theme: darkTheme,
+      home: SignUpScreen(),
     );
   }
 }

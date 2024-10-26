@@ -1,6 +1,9 @@
+import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
 import 'package:ai_chat/main.dart';
 import 'package:ai_chat/screens/chat/widgets/chat_widget.dart';
+import 'package:ai_chat/screens/chat/widgets/drawer_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -17,7 +20,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
-    TextEditingController _textFieldController = TextEditingController();
+    _textFieldController = TextEditingController();
     _scrollController = ScrollController();
     focusNode = FocusNode();
     super.initState();
@@ -33,6 +36,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final chatMessages = [
       {'message': 'Hello who are you', 'chatIndex': 0},
       {'message': 'Hello, i am ChatGPT', 'chatIndex': 1},
@@ -50,12 +54,34 @@ class _ChatScreenState extends State<ChatScreen> {
       },
     ];
     return Scaffold(
-      appBar: AppBar(),
+      drawer: DrawerWidget(),
+      appBar: AppBar(
+        // leading: IconButton(
+        //   icon: const Icon(Icons.menu),
+        //   onPressed: () {},
+        // ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: GestureDetector(
+              onTap: () {},
+              child: CircleAvatar(
+                radius: 18,
+                child: ClipOval(
+                  child: Image.asset(
+                    AssetsManager.userImage,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
       body: Center(
         child: SafeArea(
           child: Column(
             children: [
-              Expanded(
+              Flexible(
                 child: ListView.builder(
                   itemBuilder: (context, index) {
                     return ChatWidget(
@@ -66,6 +92,42 @@ class _ChatScreenState extends State<ChatScreen> {
                   },
                   itemCount: chatMessages.length,
                   // controller: _scrollController,
+                ),
+              ),
+              if (_isTyping) ...[
+                const SpinKitThreeBounce(
+                  color: Color.fromARGB(255, 106, 153, 107),
+                  size: 18,
+                ),
+              ],
+              const SizedBox(
+                height: 20,
+              ),
+              Material(
+                color: theme.cardColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          style: const TextStyle(color: Colors.white),
+                          controller: _textFieldController,
+                          onSubmitted: (value) {},
+                          decoration: const InputDecoration.collapsed(
+                            hintText: 'How can i help you',
+                            hintStyle: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.send,
+                            color: Colors.white,
+                          ))
+                    ],
+                  ),
                 ),
               )
             ],

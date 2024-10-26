@@ -1,6 +1,8 @@
 import 'package:ai_chat/configs/firebase_options.dart';
 import 'package:ai_chat/screens/auth/sign_in/view/sign_in_screen.dart';
 import 'package:ai_chat/screens/auth/sign_up/view/sign_up.dart';
+import 'package:ai_chat/screens/chat/view/chat_screen.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +25,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'AI Chat',
       theme: darkTheme,
-      home: SignUpScreen(),
+      home: ChatScreen(),
     );
   }
 }

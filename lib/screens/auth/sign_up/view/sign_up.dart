@@ -41,7 +41,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: theme.scaffoldBackgroundColor,
-          title: const Text('Sign in'),
+          title: const Text('Sign up'),
         ),
         body: SingleChildScrollView(
           child: Column(

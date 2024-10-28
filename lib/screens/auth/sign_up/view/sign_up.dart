@@ -1,4 +1,6 @@
+import 'package:ai_chat/screens/auth/sign_up/bloc/sign_up_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/ui/ui.dart';
 
@@ -36,66 +38,80 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: theme.scaffoldBackgroundColor,
-          title: const Text('Sign up'),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.12,
-              ),
-              Text(
-                'AI changes \nlives — empowering \nthe future today.',
-                style: theme.textTheme.headlineLarge?.copyWith(fontSize: 35),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              FormCardWidget(
-                child: Column(
-                  children: [
-                    CustomTextField(
-                      controller: _nameController,
-                      hintText: 'name',
+    return BlocBuilder<SignUpBloc, SignUpState>(
+      builder: (context, state) {
+        return GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: theme.scaffoldBackgroundColor,
+              title: const Text('Sign up'),
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.12,
+                  ),
+                  Text(
+                    'AI changes \nlives — empowering \nthe future today.',
+                    style:
+                        theme.textTheme.headlineLarge?.copyWith(fontSize: 35),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  FormCardWidget(
+                    child: Column(
+                      children: [
+                        CustomTextField(
+                          controller: _nameController,
+                          hintText: 'name',
+                        ),
+                        CustomTextField(
+                          controller: _emailController,
+                          hintText: 'email',
+                        ),
+                        CustomTextField(
+                          hintText: 'password',
+                          controller: _passwordController,
+                          obscureText: true,
+                        ),
+                        CustomTextField(
+                          hintText: 'confirm password',
+                          controller: _confirmPasswordController,
+                          obscureText: true,
+                        )
+                      ],
                     ),
-                    CustomTextField(
-                      controller: _emailController,
-                      hintText: 'email',
+                  ),
+                  CustomButton(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 20),
+                    width: double.infinity,
+                    height: 100,
+                    onPressed: () {
+                      if (_passwordController.text ==
+                          _confirmPasswordController.text) {
+                        context.read<SignUpBloc>().add(SignUpRequired(
+                            userName: _nameController.text,
+                            email: _emailController.text,
+                            password: _passwordController.text));
+                      }
+                    },
+                    child: Text(
+                      'Sign in',
+                      style:
+                          theme.textTheme.titleMedium?.copyWith(fontSize: 18),
                     ),
-                    CustomTextField(
-                      hintText: 'password',
-                      controller: _passwordController,
-                      obscureText: true,
-                    ),
-                    CustomTextField(
-                      hintText: 'confirm password',
-                      controller: _confirmPasswordController,
-                      obscureText: true,
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
-              CustomButton(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                width: double.infinity,
-                height: 100,
-                onPressed: () {},
-                child: Text(
-                  'Sign in',
-                  style: theme.textTheme.titleMedium?.copyWith(fontSize: 18),
-                ),
-              )
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

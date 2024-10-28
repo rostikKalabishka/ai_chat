@@ -22,7 +22,7 @@ class AuthenticationBloc
     on<AuthenticationUserChanged>((event, emit) {
       final UserModel? user = event.user;
       try {
-        if (user != null) {
+        if (user != null && user.id.isNotEmpty) {
           print('User authenticated: $user');
           emit(AuthenticationState.authenticated(user));
         } else {

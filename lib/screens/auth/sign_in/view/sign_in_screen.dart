@@ -1,9 +1,11 @@
 import 'package:ai_chat/screens/auth/sign_in/bloc/sign_in_bloc.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/ui/ui.dart';
 
+@RoutePage()
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 

@@ -1,10 +1,12 @@
 import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
-import 'package:ai_chat/main.dart';
+
 import 'package:ai_chat/screens/chat/widgets/chat_widget.dart';
 import 'package:ai_chat/screens/chat/widgets/drawer_widget.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+@RoutePage()
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
 

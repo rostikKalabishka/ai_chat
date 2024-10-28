@@ -15,8 +15,8 @@ import 'dart:io' show File;
 class UserRepository implements AbstractUserRepository {
   final FirebaseAuth _firebaseAuth;
 
-  UserRepository({required FirebaseAuth firebaseAuth})
-      : _firebaseAuth = firebaseAuth;
+  UserRepository({FirebaseAuth? firebaseAuth})
+      : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
   final usersCollection = FirebaseFirestore.instance.collection('user');
   @override
   Future<UserModel> getMyUser(String myUserId) async {

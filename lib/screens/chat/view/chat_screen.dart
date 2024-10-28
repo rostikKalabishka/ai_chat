@@ -56,10 +56,6 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       drawer: DrawerWidget(),
       appBar: AppBar(
-        // leading: IconButton(
-        //   icon: const Icon(Icons.menu),
-        //   onPressed: () {},
-        // ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),

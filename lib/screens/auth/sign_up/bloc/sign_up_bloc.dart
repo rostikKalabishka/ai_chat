@@ -11,7 +11,9 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       : userRepository = myUserRepository,
         super(SignUpInitial()) {
     on<SignUpEvent>((event, emit) async {
-      if (event is SignUpRequired) {}
+      if (event is SignUpRequired) {
+        await registration(event, emit);
+      }
     });
   }
 
@@ -20,8 +22,10 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     try {
       UserModel userModel = UserModel.emptyUser
           .copyWith(email: event.email, username: event.userName);
-      await userRepository.registration(
+      final newUser = await userRepository.registration(
           password: event.password, userModel: userModel);
+
+      await userRepository.setUserData(newUser);
       emit(SignUpSuccessState());
     } catch (e) {
       emit(SignUpFailureState(error: e));

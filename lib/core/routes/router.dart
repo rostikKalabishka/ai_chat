@@ -2,6 +2,7 @@ import 'package:ai_chat/screens/auth/sign_in/view/sign_in_screen.dart';
 import 'package:ai_chat/screens/auth/sign_up/view/sign_up.dart';
 import 'package:ai_chat/screens/chat/view/chat_screen.dart';
 import 'package:ai_chat/screens/loader/view/loader.dart';
+import 'package:ai_chat/screens/settings/view/settings_screen.dart';
 import 'package:auto_route/auto_route.dart';
 part 'router.gr.dart';
 
@@ -25,6 +26,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: ChatRoute.page,
           path: '/chat',
+        ),
+        AutoRoute(
+          page: SettingsRoute.page,
+          path: '/chat/settings',
         ),
       ];
 }

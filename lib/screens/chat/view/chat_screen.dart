@@ -1,3 +1,4 @@
+import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
 
 import 'package:ai_chat/screens/chat/widgets/chat_widget.dart';
@@ -62,7 +63,9 @@ class _ChatScreenState extends State<ChatScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                AutoRouter.of(context).push(const SettingsRoute());
+              },
               child: CircleAvatar(
                 radius: 18,
                 child: ClipOval(

@@ -1,4 +1,6 @@
+import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 class DrawerWidget extends StatelessWidget {
@@ -37,21 +39,26 @@ class DrawerWidget extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 18,
-                    child: ClipOval(
-                      child: Image.asset(
-                        AssetsManager.userImage,
+              child: GestureDetector(
+                onTap: () {
+                  AutoRouter.of(context).push(const SettingsRoute());
+                },
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 18,
+                      child: ClipOval(
+                        child: Image.asset(
+                          AssetsManager.userImage,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  const Text('dasdasdasdsa dsaads')
-                ],
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    const Text('dasdasdasdsa dsaads')
+                  ],
+                ),
               ),
             )
           ],

@@ -8,7 +8,9 @@ abstract class AuthenticationEvent extends Equatable {
 }
 
 class AuthenticationUserChanged extends AuthenticationEvent {
-  const AuthenticationUserChanged(this.user);
+  const AuthenticationUserChanged([this.user = UserModel.emptyUser]);
 
   final UserModel? user;
+  @override
+  List<Object> get props => super.props..add(user ?? UserModel.emptyUser);
 }

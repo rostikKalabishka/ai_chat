@@ -21,8 +21,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   Future<void> _signOut(SettingsSignOutEvent event, emit) async {
     emit(SettingsSignOutProcessState());
     try {
-      await userRepository.logOut();
-      emit(SettingsSignOutSuccessState());
+      await userRepository.logOut().then(emit(SettingsSignOutSuccessState()));
     } catch (e) {
       emit(SettingsFailureState(error: e));
     }

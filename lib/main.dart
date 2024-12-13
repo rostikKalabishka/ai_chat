@@ -1,4 +1,4 @@
-import 'package:ai_chat/blocs/uthentication_bloc/authentication_bloc.dart';
+import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:ai_chat/configs/firebase_options.dart';
 import 'package:ai_chat/core/di/app_initializer.dart';
 import 'package:ai_chat/core/di/di.dart';
@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:user_repository/user_repository.dart';
 
 import 'core/routes/router.dart';
@@ -18,7 +19,8 @@ Future main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  initDi();
+  final sharedPreferences = await SharedPreferences.getInstance();
+  initDi(sharedPreferences);
   runApp(MyApp());
 }
 

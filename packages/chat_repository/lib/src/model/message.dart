@@ -14,5 +14,19 @@ class Message extends Equatable {
   });
 
   @override
-  List<Object?> get props => [isUser, message, createAt];
+  List<Object?> get props => [id, isUser, message, createAt];
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'isUser': isUser,
+        'message': message,
+        'createAt': createAt,
+      };
+
+  factory Message.fromJson(Map<String, dynamic> json) => Message(
+        isUser: json['isUser'],
+        createAt: json['createAt'],
+        id: json['id'],
+        message: json['message'],
+      );
 }

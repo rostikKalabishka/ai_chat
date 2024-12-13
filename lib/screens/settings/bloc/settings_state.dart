@@ -13,6 +13,9 @@ class SettingsFailureState extends SettingsState {
   final Object error;
 
   const SettingsFailureState({required this.error});
+
+  @override
+  List<Object> get props => super.props..add(error);
 }
 
 class SettingsSignOutProcessState extends SettingsState {}

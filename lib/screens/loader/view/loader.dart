@@ -1,82 +1,33 @@
-// import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
-// import 'package:ai_chat/core/di/di.dart';
-// import 'package:ai_chat/core/routes/router.dart';
-// import 'package:ai_chat/core/utils/helpers/helpers.dart';
-// import 'package:auto_route/auto_route.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-
-// @RoutePage()
-// class LoaderScreen extends StatefulWidget {
-//   const LoaderScreen({super.key});
-
-//   @override
-//   State<LoaderScreen> createState() => _LoaderScreenState();
-// }
-
-// class _LoaderScreenState extends State<LoaderScreen> {
-//   late Helpers helpers;
-//   @override
-//   void initState() {
-//     helpers = Helpers(mySharedPref: getIt<SharedPreferences>());
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return BlocConsumer<AuthenticationBloc, AuthenticationState>(
-//       listener: (context, state) {
-//         navigateTo(context, state, helpers);
-//       },
-//       builder: (context, state) {
-//         return const Scaffold(
-//           body: Center(
-//             child: CircularProgressIndicator.adaptive(),
-//           ),
-//         );
-//       },
-//     );
-//   }
-
-//   void navigateTo(
-//       BuildContext context, AuthenticationState state, Helpers helpers) async {
-//     final navigatorToNextScreen =
-//         state.status == AuthenticationStatus.authenticated
-//             ? const ChatRoute()
-//             : const SignInRoute();
-
-//     // late final navigatorToNextScreen;
-//     // if (state.status == AuthenticationStatus.authenticated) {
-//     //   navigatorToNextScreen = const ChatRoute();
-//     // } else if (state.status != AuthenticationStatus.authenticated &&
-//     //     await helpers.showOnboarding() == true) {
-//     //   navigatorToNextScreen = const OnboardingRoute();
-//     //   await helpers.setBoolForShowOnboarding(showOnboardingBool: false);
-//     // } else {
-//     //   navigatorToNextScreen = const SignInRoute();
-//     // }
-
-//     AutoRouter.of(context)
-//         .pushAndPopUntil(navigatorToNextScreen, predicate: (router) => false);
-//   }
-// }
-
 import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:ai_chat/core/di/di.dart';
 import 'package:ai_chat/core/routes/router.dart';
+import 'package:ai_chat/core/utils/helpers/helpers.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
-class LoaderScreen extends StatelessWidget {
+class LoaderScreen extends StatefulWidget {
   const LoaderScreen({super.key});
+
+  @override
+  State<LoaderScreen> createState() => _LoaderScreenState();
+}
+
+class _LoaderScreenState extends State<LoaderScreen> {
+  late Helpers helpers;
+  @override
+  void initState() {
+    helpers = Helpers(mySharedPref: getIt<SharedPreferences>());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
-        navigateTo(context, state);
+        navigateTo(context, state, helpers);
       },
       builder: (context, state) {
         return const Scaffold(
@@ -88,11 +39,23 @@ class LoaderScreen extends StatelessWidget {
     );
   }
 
-  void navigateTo(BuildContext context, AuthenticationState state) {
-    final navigatorToNextScreen =
-        state.status == AuthenticationStatus.authenticated
-            ? const ChatRoute()
-            : const SignInRoute();
+  void navigateTo(
+      BuildContext context, AuthenticationState state, Helpers helpers) async {
+    // final navigatorToNextScreen =
+    //     state.status == AuthenticationStatus.authenticated
+    //         ? const ChatRoute()
+    //         : const SignInRoute();
+
+    late final PageRouteInfo<dynamic> navigatorToNextScreen;
+    if (state.status == AuthenticationStatus.authenticated) {
+      navigatorToNextScreen = const ChatRoute();
+    } else if (state.status != AuthenticationStatus.authenticated &&
+        await helpers.showOnboarding() == true) {
+      navigatorToNextScreen = const OnboardingRoute();
+      await helpers.setBoolForShowOnboarding(showOnboardingBool: false);
+    } else {
+      navigatorToNextScreen = const SignInRoute();
+    }
 
     AutoRouter.of(context)
         .pushAndPopUntil(navigatorToNextScreen, predicate: (router) => false);

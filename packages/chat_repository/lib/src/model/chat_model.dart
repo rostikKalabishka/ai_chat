@@ -17,4 +17,19 @@ class ChatModel extends Equatable {
 
   @override
   List<Object?> get props => [createAt, updateAt, chatName, messages];
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'createAt': createAt,
+        'updateAt': updateAt,
+        'chatName': chatName,
+        'messages': messages.map((message) => message.toJson())
+      };
+
+  factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
+      updateAt: json['updateAt'],
+      createAt: json['createAt'],
+      id: json['id'],
+      chatName: json['chatName'],
+      messages: json['messages']);
 }

@@ -36,7 +36,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return BlocBuilder<SignInBloc, SignInState>(
+    return BlocConsumer<SignInBloc, SignInState>(
       builder: (BuildContext context, SignInState state) {
         return GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
@@ -124,6 +124,12 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
           ),
         );
+      },
+      listener: (BuildContext context, SignInState state) {
+        if (state is SignInSuccessState) {
+          AutoRouter.of(context)
+              .pushAndPopUntil(const LoaderRoute(), predicate: (_) => false);
+        }
       },
     );
   }

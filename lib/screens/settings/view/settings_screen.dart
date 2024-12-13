@@ -24,9 +24,9 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: ListTile(
-                    title: Text('Sign out'),
+                    title: const Text('Sign out'),
                     onTap: () {
                       context.read<SettingsBloc>().add(SettingsSignOutEvent());
                     },

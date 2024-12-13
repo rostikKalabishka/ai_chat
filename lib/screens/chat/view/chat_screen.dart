@@ -37,27 +37,29 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
+  final chatMessages = [
+    {'message': 'Hello who are you', 'chatIndex': 0},
+    {'message': 'Hello, i am ChatGPT', 'chatIndex': 1},
+    {'message': 'What is flutter?', 'chatIndex': 0},
+    {
+      'message': 'Flutter is open-source mobile application dev framework',
+      'chatIndex': 1
+    },
+    {'message': 'Hello who are you', 'chatIndex': 0},
+    {'message': 'Hello, i am ChatGPT', 'chatIndex': 1},
+    {'message': 'What is flutter?', 'chatIndex': 0},
+    {
+      'message': 'Flutter is open-source mobile application dev framework',
+      'chatIndex': 1
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final chatMessages = [
-      {'message': 'Hello who are you', 'chatIndex': 0},
-      {'message': 'Hello, i am ChatGPT', 'chatIndex': 1},
-      {'message': 'What is flutter?', 'chatIndex': 0},
-      {
-        'message': 'Flutter is open-source mobile application dev framework',
-        'chatIndex': 1
-      },
-      {'message': 'Hello who are you', 'chatIndex': 0},
-      {'message': 'Hello, i am ChatGPT', 'chatIndex': 1},
-      {'message': 'What is flutter?', 'chatIndex': 0},
-      {
-        'message': 'Flutter is open-source mobile application dev framework',
-        'chatIndex': 1
-      },
-    ];
+
     return Scaffold(
-      drawer: DrawerWidget(),
+      drawer: const DrawerWidget(),
       appBar: AppBar(
         actions: [
           Padding(
@@ -84,6 +86,7 @@ class _ChatScreenState extends State<ChatScreen> {
             children: [
               Flexible(
                 child: ListView.builder(
+                  controller: _scrollController,
                   itemBuilder: (context, index) {
                     return ChatWidget(
                       chatIndex: int.parse(
@@ -122,7 +125,25 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                       ),
                       IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            setState(() {
+                              final newMessage =
+                                  _textFieldController.text.trim();
+                              if (newMessage.isNotEmpty) {
+                                setState(() {
+                                  chatMessages.add(
+                                      {'message': newMessage, 'chatIndex': 0});
+                                  _textFieldController.clear();
+                                });
+
+                                _scrollController.animateTo(
+                                  _scrollController.position.maxScrollExtent,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeOut,
+                                );
+                              }
+                            });
+                          },
                           icon: const Icon(
                             Icons.send,
                             color: Colors.white,

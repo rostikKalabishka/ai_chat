@@ -79,9 +79,11 @@ class LoaderScreen extends StatelessWidget {
         navigateTo(context, state);
       },
       builder: (context, state) {
-        context
-            .read<AuthenticationBloc>()
-            .add(const AuthenticationUserChanged());
+        if (state.status == AuthenticationStatus.unknown) {
+          context
+              .read<AuthenticationBloc>()
+              .add(const AuthenticationUserChanged());
+        }
         return const Scaffold(
           body: Center(
             child: CircularProgressIndicator.adaptive(),

@@ -11,9 +11,7 @@ GetIt getIt = GetIt.instance;
 
 void initDi(SharedPreferences sharedPreferences) {
   getIt.registerLazySingleton<UserRepository>(() => UserRepository());
-
   getIt.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
-
   getIt.registerLazySingleton<Helpers>(
       () => Helpers(mySharedPref: sharedPreferences));
 

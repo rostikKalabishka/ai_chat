@@ -75,15 +75,10 @@ class LoaderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthenticationBloc, AuthenticationState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         navigateTo(context, state);
       },
       builder: (context, state) {
-        if (state.status == AuthenticationStatus.unknown) {
-          context
-              .read<AuthenticationBloc>()
-              .add(const AuthenticationUserChanged());
-        }
         return const Scaffold(
           body: Center(
             child: CircularProgressIndicator.adaptive(),

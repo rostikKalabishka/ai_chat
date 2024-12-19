@@ -14,7 +14,7 @@ class SettingsScreen extends StatelessWidget {
       listener: (BuildContext context, state) {
         if (state is SettingsSignOutSuccessState) {
           AutoRouter.of(context)
-              .pushAndPopUntil(const LoaderRoute(), predicate: (_) => false);
+              .pushAndPopUntil(const SignInRoute(), predicate: (_) => false);
         }
       },
       builder: (context, state) {

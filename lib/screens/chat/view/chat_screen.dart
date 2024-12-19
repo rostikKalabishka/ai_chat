@@ -1,6 +1,9 @@
+import 'dart:developer';
+
+import 'package:ai_chat/core/constants/api_const.dart';
 import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
-
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:ai_chat/screens/chat/widgets/chat_widget.dart';
 import 'package:ai_chat/screens/chat/widgets/drawer_widget.dart';
 import 'package:auto_route/auto_route.dart';
@@ -20,13 +23,46 @@ class _ChatScreenState extends State<ChatScreen> {
   late TextEditingController _textFieldController;
   late ScrollController _scrollController;
   late FocusNode focusNode;
+  late final GenerativeModel _model;
+  List<Message> messagesInChat = [];
 
   @override
   void initState() {
     _textFieldController = TextEditingController();
     _scrollController = ScrollController();
     focusNode = FocusNode();
+    _model = GenerativeModel(
+      model: 'gemini-1.5-flash-latest',
+      apiKey: API_KEY,
+    );
     super.initState();
+  }
+
+  Future<void> _sendMessage() async {
+    try {
+      final userMessage = _textFieldController.text;
+      setState(() {
+        messagesInChat
+            .add(Message(isUser: 'USER_MESSAGE', message: userMessage));
+      });
+      _textFieldController.clear();
+
+      final prompt =
+          TextPart(messagesInChat.map((e) => e.toJson()).toList().join('\n'));
+
+      print(prompt.text);
+      final response = await _model.generateContent([
+        Content.multi([prompt])
+      ]);
+      log(response.text.toString());
+
+      setState(() {
+        messagesInChat.add(
+            Message(isUser: "BOT_MESSAGE", message: response.text ?? "aboba"));
+      });
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   @override
@@ -36,23 +72,6 @@ class _ChatScreenState extends State<ChatScreen> {
     focusNode.dispose();
     super.dispose();
   }
-
-  final chatMessages = [
-    {'message': 'Hello who are you', 'chatIndex': 0},
-    {'message': 'Hello, i am ChatGPT', 'chatIndex': 1},
-    {'message': 'What is flutter?', 'chatIndex': 0},
-    {
-      'message': 'Flutter is open-source mobile application dev framework',
-      'chatIndex': 1
-    },
-    {'message': 'Hello who are you', 'chatIndex': 0},
-    {'message': 'Hello, i am ChatGPT', 'chatIndex': 1},
-    {'message': 'What is flutter?', 'chatIndex': 0},
-    {
-      'message': 'Flutter is open-source mobile application dev framework',
-      'chatIndex': 1
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -89,12 +108,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   controller: _scrollController,
                   itemBuilder: (context, index) {
                     return ChatWidget(
-                      chatIndex: int.parse(
-                          chatMessages[index]['chatIndex'].toString()),
-                      message: chatMessages[index]['message'].toString(),
+                      isUser: messagesInChat[index].isUser,
+                      message: messagesInChat[index].message,
                     );
                   },
-                  itemCount: chatMessages.length,
+                  itemCount: messagesInChat.length,
                   // controller: _scrollController,
                 ),
               ),
@@ -125,17 +143,12 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                       ),
                       IconButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            await _sendMessage();
                             setState(() {
                               final newMessage =
                                   _textFieldController.text.trim();
                               if (newMessage.isNotEmpty) {
-                                setState(() {
-                                  chatMessages.add(
-                                      {'message': newMessage, 'chatIndex': 0});
-                                  _textFieldController.clear();
-                                });
-
                                 _scrollController.animateTo(
                                   _scrollController.position.maxScrollExtent,
                                   duration: const Duration(milliseconds: 300),
@@ -158,4 +171,21 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+}
+
+class Message {
+  final String isUser;
+  final String message;
+
+  Message({required this.isUser, required this.message});
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'isUser': isUser,
+        'message': message,
+      };
+
+  factory Message.fromJson(Map<String, dynamic> json) => Message(
+        isUser: json['isUser'],
+        message: json['message'],
+      );
 }

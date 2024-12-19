@@ -7,26 +7,27 @@ class ChatWidget extends StatelessWidget {
   const ChatWidget({
     super.key,
     required this.message,
-    required this.chatIndex,
+    required this.isUser,
   });
 
   final String message;
-  final int chatIndex;
+  final String isUser;
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
       children: [
         Material(
-          color:
-              chatIndex == 0 ? theme.scaffoldBackgroundColor : theme.cardColor,
+          color: isUser == "USER_MESSAGE"
+              ? theme.scaffoldBackgroundColor
+              : theme.cardColor,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Image.asset(
-                  chatIndex == 0
+                  isUser == "USER_MESSAGE"
                       ? AssetsManager.userImage
                       : AssetsManager.chatLogoImage,
                   width: 30,
@@ -34,7 +35,7 @@ class ChatWidget extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: chatIndex == 0
+                  child: isUser == "USER_MESSAGE"
                       ? TextWidget(
                           label: message,
                         )
@@ -53,7 +54,7 @@ class ChatWidget extends StatelessWidget {
                               ]),
                         ),
                 ),
-                chatIndex == 0
+                isUser == 0
                     ? const SizedBox.shrink()
                     : const Row(
                         mainAxisAlignment: MainAxisAlignment.end,

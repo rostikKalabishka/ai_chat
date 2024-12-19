@@ -123,10 +123,17 @@ class UserRepository implements AbstractUserRepository {
       if (firebaseUser == null) {
         yield UserModel.emptyUser;
       } else {
-        yield await usersCollection
-            .doc(firebaseUser.uid)
-            .get()
-            .then((value) => UserModel.fromJson(value.data()!));
+        try {
+          final userDoc = await usersCollection.doc(firebaseUser.uid).get();
+          if (userDoc.exists) {
+            yield UserModel.fromJson(userDoc.data()!);
+          } else {
+            yield UserModel.emptyUser;
+          }
+        } catch (e) {
+          log('Error fetching user data: $e');
+          yield UserModel.emptyUser;
+        }
       }
     });
   }

@@ -1,3 +1,4 @@
+import 'package:chat_repository/chat_repository.dart';
 import 'package:chat_repository/src/model/message.dart';
 
 abstract interface class AbstractChatRepository {
@@ -5,5 +6,10 @@ abstract interface class AbstractChatRepository {
 
   Future<void> updateChat({required List<Message> messageForNewChat});
 
+  Future<void> sendMessage(
+      {required ChatModel chatModel, required Message userMessage});
+
   Future<void> getResponse({required Message message});
+
+  Future<void> deleteChat({required String chatId});
 }

@@ -41,14 +41,14 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> _sendMessage() async {
     try {
       final userMessage = _textFieldController.text;
+      final context = messagesInChat.map((e) => e.toJson()).toList().join('\n');
       setState(() {
-        messagesInChat
-            .add(Message(isUser: 'USER_MESSAGE', message: userMessage));
+        messagesInChat.add(Message(isUser: true, message: userMessage));
       });
       _textFieldController.clear();
 
       final prompt =
-          TextPart(messagesInChat.map((e) => e.toJson()).toList().join('\n'));
+          TextPart('promt: $userMessage , \n contextDialog:$context,');
 
       print(prompt.text);
       final response = await _model.generateContent([
@@ -57,8 +57,8 @@ class _ChatScreenState extends State<ChatScreen> {
       log(response.text.toString());
 
       setState(() {
-        messagesInChat.add(
-            Message(isUser: "BOT_MESSAGE", message: response.text ?? "aboba"));
+        messagesInChat
+            .add(Message(isUser: false, message: response.text ?? "Error"));
       });
     } catch (e) {
       log(e.toString());
@@ -174,7 +174,7 @@ class _ChatScreenState extends State<ChatScreen> {
 }
 
 class Message {
-  final String isUser;
+  final bool isUser;
   final String message;
 
   Message({required this.isUser, required this.message});

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:ai_chat/core/constants/api_const.dart';
 import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
+import 'package:chat_repository/chat_repository.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:ai_chat/screens/chat/widgets/chat_widget.dart';
 import 'package:ai_chat/screens/chat/widgets/drawer_widget.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 @RoutePage()
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
+  //final String? chatId;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -23,7 +25,7 @@ class _ChatScreenState extends State<ChatScreen> {
   late TextEditingController _textFieldController;
   late ScrollController _scrollController;
   late FocusNode focusNode;
-  late final GenerativeModel _model;
+
   List<Message> messagesInChat = [];
 
   @override
@@ -31,39 +33,36 @@ class _ChatScreenState extends State<ChatScreen> {
     _textFieldController = TextEditingController();
     _scrollController = ScrollController();
     focusNode = FocusNode();
-    _model = GenerativeModel(
-      model: 'gemini-1.5-flash-latest',
-      apiKey: API_KEY,
-    );
+
     super.initState();
   }
 
-  Future<void> _sendMessage() async {
-    try {
-      final userMessage = _textFieldController.text;
-      final context = messagesInChat.map((e) => e.toJson()).toList().join('\n');
-      setState(() {
-        messagesInChat.add(Message(isUser: true, message: userMessage));
-      });
-      _textFieldController.clear();
+  // Future<void> _sendMessage() async {
+  //   try {
+  //     final userMessage = _textFieldController.text;
+  //     final context = messagesInChat.map((e) => e.toJson()).toList().join('\n');
+  //     setState(() {
+  //       messagesInChat.add(Message(isUser: true, message: userMessage));
+  //     });
+  //     _textFieldController.clear();
 
-      final prompt =
-          TextPart('promt: $userMessage , \n contextDialog:$context,');
+  //     final prompt =
+  //         TextPart('promt: $userMessage , \n contextDialog:$context,');
 
-      print(prompt.text);
-      final response = await _model.generateContent([
-        Content.multi([prompt])
-      ]);
-      log(response.text.toString());
+  //     print(prompt.text);
+  //     final response = await _model.generateContent([
+  //       Content.multi([prompt])
+  //     ]);
+  //     log(response.text.toString());
 
-      setState(() {
-        messagesInChat
-            .add(Message(isUser: false, message: response.text ?? "Error"));
-      });
-    } catch (e) {
-      log(e.toString());
-    }
-  }
+  //     setState(() {
+  //       messagesInChat
+  //           .add(Message(isUser: false, message: response.text ?? "Error"));
+  //     });
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -144,7 +143,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       IconButton(
                           onPressed: () async {
-                            await _sendMessage();
                             setState(() {
                               final newMessage =
                                   _textFieldController.text.trim();
@@ -171,21 +169,4 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
-}
-
-class Message {
-  final bool isUser;
-  final String message;
-
-  Message({required this.isUser, required this.message});
-
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'isUser': isUser,
-        'message': message,
-      };
-
-  factory Message.fromJson(Map<String, dynamic> json) => Message(
-        isUser: json['isUser'],
-        message: json['message'],
-      );
 }

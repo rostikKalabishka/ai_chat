@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
 class Message extends Equatable {
@@ -37,4 +38,22 @@ class Message extends Equatable {
       message: json['message'],
       dislikeMessage: json['dislikeMessage'],
       likeMessage: json['likeMessage']);
+
+  Message copyWith({
+    String? id,
+    bool? isUser,
+    String? message,
+    bool? likeMessage,
+    bool? dislikeMessage,
+    DateTime? createAt,
+  }) {
+    return Message(
+      id: id ?? this.id,
+      isUser: isUser ?? this.isUser,
+      message: message ?? this.message,
+      likeMessage: likeMessage ?? this.likeMessage,
+      dislikeMessage: dislikeMessage ?? this.dislikeMessage,
+      createAt: createAt ?? this.createAt,
+    );
+  }
 }

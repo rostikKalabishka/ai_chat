@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:chat_repository/chat_repository.dart';
 import 'package:equatable/equatable.dart';
 
 part 'chat_event.dart';

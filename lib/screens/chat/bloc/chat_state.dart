@@ -21,7 +21,7 @@ class ChatState extends Equatable {
   final LoadHistoryState loadHistoryState;
   final ChatModel chatModel;
   final List<Message> messages;
-  final String chatId;
+  final String? chatId;
   final bool isTyping;
   final String userCreatorChatId;
   final List<ChatModel> chatHistory;
@@ -32,11 +32,11 @@ class ChatState extends Equatable {
         chatPageState,
         chatModel,
         messages,
-        chatId,
         isTyping,
         userCreatorChatId,
         chatHistory,
-        loadHistoryState
+        loadHistoryState,
+        [chatId]
       ];
 
   ChatState copyWith(

@@ -18,7 +18,11 @@ class LoadChatInfo extends ChatEvent {
   });
 
   @override
-  List<Object> get props => super.props..addAll([userId]);
+  List<Object> get props => super.props
+    ..addAll([
+      userId,
+      [chatId]
+    ]);
 }
 
 class SendMessageInChat extends ChatEvent {

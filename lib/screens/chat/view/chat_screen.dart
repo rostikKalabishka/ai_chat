@@ -61,7 +61,7 @@ class _ChatScreenState extends State<ChatScreen> {
             actions: [
               IconButton(
                   onPressed: () {
-                    // AutoRouter.of(context).push(ChatRoute(chatId: null));
+                    AutoRouter.of(context).push(ChatRoute(chatId: null));
                   },
                   icon: const Icon(Icons.add)),
               Padding(

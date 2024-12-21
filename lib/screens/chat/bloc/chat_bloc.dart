@@ -31,7 +31,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(state.copyWith(chatPageState: LoadChatPageState.loading));
     try {
       final String? chatId = event.chatId;
-      if (chatId != null) {
+      if (chatId != null && chatId.isNotEmpty) {
         final ChatModel chatModel =
             await chatRepository.getChat(chatId: chatId);
 
@@ -43,9 +43,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             chatId: chatModel.id));
       } else {
         emit(state.copyWith(
-            chatPageState: LoadChatPageState.loaded,
-            userCreatorChatId: event.userId,
-            chatModel: ChatModel.emptyChatModel));
+          chatId: chatId,
+          chatPageState: LoadChatPageState.loaded,
+          chatModel: ChatModel.emptyChatModel,
+          messages: [],
+          userCreatorChatId: event.userId,
+        ));
       }
     } catch (e) {
       emit(state.copyWith(error: e));
@@ -60,12 +63,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     try {
       final chatId = state.chatId;
       late final ChatModel chat;
-      if (chatId.isEmpty) {
+      if (chatId != null && chatId.isEmpty) {
+        chat = state.chatModel;
+      } else {
         chat = await chatRepository.createChat(
             userCreatorChat: state.userCreatorChatId);
         emit(state.copyWith(chatModel: chat, chatId: chat.id));
-      } else {
-        chat = state.chatModel;
       }
 
       final Message userMessage = Message.emptyMessage

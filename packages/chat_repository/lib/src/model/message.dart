@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class Message extends Equatable {
@@ -41,7 +42,7 @@ class Message extends Equatable {
 
   factory Message.fromJson(Map<String, dynamic> json) => Message(
       isUser: json['isUser'],
-      createAt: json['createAt'],
+      createAt: (json['createAt'] as Timestamp).toDate(),
       id: json['id'],
       message: json['message'],
       dislikeMessage: json['dislikeMessage'],

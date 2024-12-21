@@ -19,16 +19,30 @@ class ChatRepository implements AbstractChatRepository {
     );
   }
   @override
-  Future<void> createChat({required List<Message> messageForNewChat}) async {
+  Future<ChatModel> createChat({required String userCreatorChat}) async {
     try {
       final dateTime = DateTime.now();
       final ChatModel chatModel = ChatModel(
-          messages: messageForNewChat,
-          id: Uuid().v1(),
-          createAt: dateTime,
-          updateAt: dateTime,
-          chatName: messageForNewChat[0].message);
+        messages: [],
+        id: Uuid().v1(),
+        createAt: dateTime,
+        updateAt: dateTime,
+        chatName: '',
+        userCreatorChat: userCreatorChat,
+      );
+
       await _chatsCollection.doc(chatModel.id).set(chatModel.toJson());
+
+      final chatSnapshot = await _chatsCollection.doc(chatModel.id).get();
+
+      if (chatSnapshot.exists) {
+        final chatData = chatSnapshot.data();
+        if (chatData != null) {
+          return ChatModel.fromJson(chatData);
+        }
+      }
+
+      throw Exception('Chat not found or data is null');
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -50,8 +64,14 @@ class ChatRepository implements AbstractChatRepository {
   }
 
   @override
-  Future<void> updateChat({required List<Message> messageForNewChat}) async {
-    try {} catch (e) {
+  Future<void> updateChat({required ChatModel chatModel}) async {
+    try {
+      log(chatModel.messages.toString());
+      await _chatsCollection.doc(chatModel.id).update({
+        "messages": chatModel.messages.map((message) => message.toJson()),
+        "chatName": chatModel.messages[0].message
+      });
+    } catch (e) {
       log(e.toString());
       rethrow;
     }
@@ -64,28 +84,20 @@ class ChatRepository implements AbstractChatRepository {
   }) async {
     final dateTime = DateTime.now();
     try {
-      if (chatModel.id.isEmpty) {
-        chatModel = chatModel.copyWith(id: Uuid().v4());
-      }
-
-      final chatDoc = _chatsCollection.doc(chatModel.id);
-      final existingDoc = await chatDoc.get();
-
-      final context =
-          chatModel.messages.map((e) => e.toJson()).toList().join('\n');
-      log(context);
+      final context = chatModel.messages
+          .map((e) => {"message": e.message, "isUser": e.isUser})
+          .toList()
+          .join('\n');
 
       final TextPart prompt = TextPart(Constants.askFilePrompt
           .replaceAll('{{conversationHistory}}', context)
           .replaceAll('{{userMessage}}', userMessage.message));
 
-      log('prompt: $prompt');
-
       final response = await _model.generateContent([
         Content.multi([prompt])
       ]);
 
-      userMessage = userMessage.copyWith(
+      final updateUserMessage = userMessage.copyWith(
           id: Uuid().v4(), createAt: DateTime.now(), isUser: true);
 
       final responseMessage = Message(
@@ -96,12 +108,13 @@ class ChatRepository implements AbstractChatRepository {
           likeMessage: false,
           dislikeMessage: false);
 
-      chatModel = chatModel.copyWith(
-          messages: [...chatModel.messages, userMessage, responseMessage]);
+      final updateChatModel = chatModel.copyWith(messages: [
+        ...chatModel.messages,
+        updateUserMessage,
+        responseMessage
+      ]);
 
-      if (!existingDoc.exists) {
-        await createChat(messageForNewChat: chatModel.messages);
-      }
+      await updateChat(chatModel: updateChatModel);
 
       return responseMessage;
     } catch (e) {
@@ -114,6 +127,48 @@ class ChatRepository implements AbstractChatRepository {
   Future<void> deleteChat({required String chatId}) async {
     try {
       await _chatsCollection.doc(chatId).delete();
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<ChatModel>> getHistoryCurrentUser(
+      {required String userId}) async {
+    try {
+      final querySnapshot = await _chatsCollection
+          .where("userCreatorChat", isEqualTo: userId)
+          // .orderBy('updateAt', descending: true)
+          // .orderBy('createAt', descending: true)
+          .get();
+
+      final historyData = querySnapshot.docs
+          .map((doc) => ChatModel.fromJson(doc.data()))
+          .toList();
+      return historyData;
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<ChatModel>> searchChat(
+      {required String userId, required String query}) async {
+    try {
+      final querySnapshot = await _chatsCollection
+          .where("userCreatorChat", isEqualTo: userId)
+          .get();
+
+      var filteredDocs = querySnapshot.docs
+          .where((docs) => docs.data()['chatName'].toString().contains(query));
+
+      return filteredDocs
+          .map(
+            (doc) => ChatModel.fromJson(doc.data()),
+          )
+          .toList();
     } catch (e) {
       log(e.toString());
       rethrow;

@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
 import 'package:ai_chat/screens/chat/bloc/chat_bloc.dart';
@@ -20,7 +23,6 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  bool _isTyping = false;
   late TextEditingController _textFieldController;
   late ScrollController _scrollController;
   late FocusNode focusNode;
@@ -30,7 +32,13 @@ class _ChatScreenState extends State<ChatScreen> {
     _textFieldController = TextEditingController();
     _scrollController = ScrollController();
     focusNode = FocusNode();
-    context.read<ChatBloc>().add(LoadChatInfo(chatId: widget.chatId));
+    final String userId = context.read<AuthenticationBloc>().state.user!.id;
+    log(widget.chatId.toString());
+    context
+        .read<ChatBloc>()
+        .add(LoadChatInfo(chatId: widget.chatId, userId: userId));
+
+    context.read<ChatBloc>().add(LoadChatHistory(userId: userId));
 
     super.initState();
   }
@@ -71,87 +79,95 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ],
           ),
-          body: state.chatPageState == LoadChatPageState.loaded
-              ? Center(
-                  child: SafeArea(
-                    child: Column(
-                      children: [
-                        Flexible(
-                          child: ListView.builder(
-                            controller: _scrollController,
-                            itemBuilder: (context, index) {
-                              final List<Message> messagesInChat =
-                                  state.messages;
-                              return ChatWidget(
-                                isUser: messagesInChat[index].isUser,
-                                message: messagesInChat[index].message,
-                              );
-                            },
-                            itemCount: state.messages.length,
-                            // controller: _scrollController,
-                          ),
-                        ),
-                        if (_isTyping) ...[
-                          const SpinKitThreeBounce(
-                            color: Color.fromARGB(255, 106, 153, 107),
-                            size: 18,
-                          ),
-                        ],
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Material(
-                          color: theme.cardColor,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    style: const TextStyle(color: Colors.white),
-                                    controller: _textFieldController,
-                                    onSubmitted: (value) {},
-                                    decoration: const InputDecoration.collapsed(
-                                      hintText: 'How can i help you',
-                                      hintStyle: TextStyle(color: Colors.grey),
-                                    ),
-                                  ),
-                                ),
-                                IconButton(
-                                    onPressed: () async {
-                                      setState(() {
-                                        final newMessage =
-                                            _textFieldController.text.trim();
-                                        _textFieldController.clear();
-
-                                        if (newMessage.isNotEmpty) {
-                                          context.read<ChatBloc>().add(
-                                              SendMessageInChat(newMessage));
-                                          _scrollController.animateTo(
-                                            _scrollController
-                                                .position.maxScrollExtent,
-                                            duration: const Duration(
-                                                milliseconds: 300),
-                                            curve: Curves.easeOut,
-                                          );
-                                        }
-                                      });
-                                    },
-                                    icon: const Icon(
-                                      Icons.send,
-                                      color: Colors.white,
-                                    ))
-                              ],
+          body: RefreshIndicator.adaptive(
+            onRefresh: () async {
+              context.read<ChatBloc>().add(LoadChatInfo(
+                  chatId: state.chatId, userId: state.userCreatorChatId));
+            },
+            child: state.chatPageState == LoadChatPageState.loaded
+                ? Center(
+                    child: SafeArea(
+                      child: Column(
+                        children: [
+                          Flexible(
+                            child: ListView.builder(
+                              controller: _scrollController,
+                              itemBuilder: (context, index) {
+                                final List<Message> messagesInChat =
+                                    state.messages;
+                                return ChatWidget(
+                                  isUser: messagesInChat[index].isUser,
+                                  message: messagesInChat[index].message,
+                                );
+                              },
+                              itemCount: state.messages.length,
                             ),
                           ),
-                        )
-                      ],
+                          if (state.isTyping) ...[
+                            const SpinKitThreeBounce(
+                              color: Color.fromARGB(255, 106, 153, 107),
+                              size: 18,
+                            ),
+                          ],
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Material(
+                            color: theme.cardColor,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                      controller: _textFieldController,
+                                      onSubmitted: (value) {},
+                                      decoration:
+                                          const InputDecoration.collapsed(
+                                        hintText: 'How can i help you',
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey),
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                      onPressed: () async {
+                                        setState(() {
+                                          final newMessage =
+                                              _textFieldController.text.trim();
+                                          _textFieldController.clear();
+
+                                          if (newMessage.isNotEmpty) {
+                                            context.read<ChatBloc>().add(
+                                                SendMessageInChat(newMessage));
+                                            _scrollController.animateTo(
+                                              _scrollController
+                                                  .position.maxScrollExtent,
+                                              duration: const Duration(
+                                                  milliseconds: 300),
+                                              curve: Curves.easeOut,
+                                            );
+                                          }
+                                        });
+                                      },
+                                      icon: const Icon(
+                                        Icons.send,
+                                        color: Colors.white,
+                                      ))
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
+                  )
+                : const Center(
+                    child: CircularProgressIndicator.adaptive(),
                   ),
-                )
-              : const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                ),
+          ),
         );
       },
     );

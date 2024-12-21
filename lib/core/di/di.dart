@@ -26,6 +26,7 @@ void initDi(SharedPreferences sharedPreferences) {
       () => AuthenticationBloc(myUserRepository: getIt<UserRepository>()));
   getIt.registerLazySingleton<SettingsBloc>(
       () => SettingsBloc(myUserRepository: getIt<UserRepository>()));
-  getIt.registerLazySingleton<ChatBloc>(
-      () => ChatBloc(myChatRepository: getIt<ChatRepository>()));
+  getIt.registerLazySingleton<ChatBloc>(() => ChatBloc(
+        myChatRepository: getIt<ChatRepository>(),
+      ));
 }

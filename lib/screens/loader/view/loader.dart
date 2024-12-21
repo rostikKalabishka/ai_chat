@@ -89,12 +89,12 @@ class LoaderScreen extends StatelessWidget {
   }
 
   void navigateTo(BuildContext context, AuthenticationState state) {
-    final navigatorToNextScreen =
-        state.status == AuthenticationStatus.authenticated
-            ? const ChatRoute()
-            : const SignInRoute();
-
-    AutoRouter.of(context)
-        .pushAndPopUntil(navigatorToNextScreen, predicate: (router) => false);
+    if (state.status == AuthenticationStatus.authenticated) {
+      AutoRouter.of(context)
+          .pushAndPopUntil(ChatRoute(), predicate: (router) => false);
+    } else {
+      AutoRouter.of(context)
+          .pushAndPopUntil(const SignInRoute(), predicate: (router) => false);
+    }
   }
 }

@@ -16,9 +16,14 @@ abstract class _$AppRouter extends RootStackRouter {
   @override
   final Map<String, PageFactory> pagesMap = {
     ChatRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<ChatRouteArgs>(orElse: () => const ChatRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ChatScreen(),
+        child: ChatScreen(
+          key: args.key,
+          chatId: args.chatId,
+        ),
       );
     },
     LoaderRoute.name: (routeData) {
@@ -56,16 +61,39 @@ abstract class _$AppRouter extends RootStackRouter {
 
 /// generated route for
 /// [ChatScreen]
-class ChatRoute extends PageRouteInfo<void> {
-  const ChatRoute({List<PageRouteInfo>? children})
-      : super(
+class ChatRoute extends PageRouteInfo<ChatRouteArgs> {
+  ChatRoute({
+    Key? key,
+    String? chatId,
+    List<PageRouteInfo>? children,
+  }) : super(
           ChatRoute.name,
+          args: ChatRouteArgs(
+            key: key,
+            chatId: chatId,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'ChatRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<ChatRouteArgs> page = PageInfo<ChatRouteArgs>(name);
+}
+
+class ChatRouteArgs {
+  const ChatRouteArgs({
+    this.key,
+    this.chatId,
+  });
+
+  final Key? key;
+
+  final String? chatId;
+
+  @override
+  String toString() {
+    return 'ChatRouteArgs{key: $key, chatId: $chatId}';
+  }
 }
 
 /// generated route for

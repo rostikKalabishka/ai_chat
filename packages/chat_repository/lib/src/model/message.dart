@@ -7,7 +7,7 @@ class Message extends Equatable {
   final String message;
   final bool likeMessage;
   final bool dislikeMessage;
-  final DateTime createAt;
+  final DateTime? createAt;
 
   const Message({
     required this.isUser,
@@ -17,6 +17,14 @@ class Message extends Equatable {
     required this.likeMessage,
     required this.dislikeMessage,
   });
+
+  static const Message emptyMessage = Message(
+      id: '',
+      isUser: true,
+      message: '',
+      createAt: null,
+      likeMessage: false,
+      dislikeMessage: false);
 
   @override
   List<Object?> get props =>

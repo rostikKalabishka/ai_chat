@@ -1,7 +1,7 @@
 name: user_repository
 description: "A new Flutter package project."
 version: 0.0.1
-# homepage:
+publish_to: none
 
 environment:
   sdk: ">=3.3.3 <4.0.0"
@@ -10,6 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  chat_repository:
+    path: ../chat_repository
+
   firebase_auth: ^5.3.0
   firebase_core: ^3.5.0
   equatable: ^2.0.5

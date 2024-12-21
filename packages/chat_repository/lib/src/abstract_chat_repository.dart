@@ -9,7 +9,7 @@ abstract interface class AbstractChatRepository {
   Future<void> sendMessage(
       {required ChatModel chatModel, required Message userMessage});
 
-  Future<void> getResponse({required Message message});
+  Future<void> getChat({required String chatId});
 
   Future<void> deleteChat({required String chatId});
 }

@@ -1,19 +1,31 @@
 part of 'chat_bloc.dart';
 
-enum LoadChatPageState { load, loaded, unknown }
+enum LoadChatPageState { loading, loaded, unknown }
 
-sealed class ChatState extends Equatable {
+class ChatState extends Equatable {
   const ChatState(
       {this.error = '',
       this.chatPageState = LoadChatPageState.unknown,
-      this.chatModel = ChatModel.emptyChatModel});
+      this.chatModel = ChatModel.emptyChatModel,
+      this.messages = const []});
 
   final Object error;
   final LoadChatPageState chatPageState;
   final ChatModel chatModel;
+  final List<Message> messages;
 
   @override
-  List<Object> get props => [error, chatPageState];
-}
+  List<Object> get props => [error, chatPageState, chatModel, messages];
 
-final class ChatInitial extends ChatState {}
+  ChatState copyWith(
+      {Object? error,
+      LoadChatPageState? chatPageState,
+      ChatModel? chatModel,
+      List<Message>? messages}) {
+    return ChatState(
+        error: error ?? this.error,
+        chatPageState: chatPageState ?? this.chatPageState,
+        chatModel: chatModel ?? this.chatModel,
+        messages: messages ?? this.messages);
+  }
+}

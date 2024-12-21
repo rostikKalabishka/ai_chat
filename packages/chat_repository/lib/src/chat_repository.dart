@@ -66,7 +66,6 @@ class ChatRepository implements AbstractChatRepository {
   @override
   Future<void> updateChat({required ChatModel chatModel}) async {
     try {
-      log(chatModel.messages.toString());
       await _chatsCollection.doc(chatModel.id).update({
         "messages": chatModel.messages.map((message) => message.toJson()),
         "chatName": chatModel.messages[0].message

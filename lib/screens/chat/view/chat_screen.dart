@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
@@ -33,7 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _scrollController = ScrollController();
     focusNode = FocusNode();
     final String userId = context.read<AuthenticationBloc>().state.user!.id;
-    log(widget.chatId.toString());
+
     context
         .read<ChatBloc>()
         .add(LoadChatInfo(chatId: widget.chatId, userId: userId));
@@ -61,6 +59,11 @@ class _ChatScreenState extends State<ChatScreen> {
           drawer: const DrawerWidget(),
           appBar: AppBar(
             actions: [
+              IconButton(
+                  onPressed: () {
+                    // AutoRouter.of(context).push(ChatRoute(chatId: null));
+                  },
+                  icon: const Icon(Icons.add)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: GestureDetector(

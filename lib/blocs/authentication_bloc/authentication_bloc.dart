@@ -30,6 +30,7 @@ class AuthenticationBloc
         }
       } catch (e) {
         log(e.toString());
+        rethrow;
       }
     });
   }

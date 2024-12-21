@@ -3,7 +3,6 @@ import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
 import 'package:ai_chat/screens/chat/bloc/chat_bloc.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:chat_repository/chat_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,8 +11,9 @@ class DrawerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = context.read<ChatBloc>().state;
     final currentUser = context.read<AuthenticationBloc>().state.user;
-    final history = context.read<ChatBloc>().state.chatHistory;
+    final history = state.chatHistory;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Drawer(
@@ -41,24 +41,28 @@ class DrawerWidget extends StatelessWidget {
               ),
             ),
             const Divider(),
-            Flexible(
-              child: RefreshIndicator.adaptive(
-                onRefresh: () async {
-                  context.read<ChatBloc>().add(const LoadChatHistory());
-                },
-                child: ListView.builder(
-                    itemCount: history.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(history[index].chatName),
-                        onTap: () {
-                          AutoRouter.of(context)
-                              .push(ChatRoute(chatId: history[index].id));
-                        },
-                      );
-                    }),
-              ),
-            ),
+            state.loadHistoryState == LoadHistoryState.loaded
+                ? Flexible(
+                    child: RefreshIndicator.adaptive(
+                      onRefresh: () async {
+                        context.read<ChatBloc>().add(const LoadChatHistory());
+                      },
+                      child: ListView.builder(
+                          itemCount: history.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(history[index].chatName),
+                              onTap: () {
+                                AutoRouter.of(context)
+                                    .push(ChatRoute(chatId: history[index].id));
+                              },
+                            );
+                          }),
+                    ),
+                  )
+                : const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  ),
             const SizedBox(
               height: 20,
             ),

@@ -1,7 +1,8 @@
 import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:ai_chat/blocs/history_bloc/history_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
-import 'package:ai_chat/screens/chat/bloc/chat_bloc.dart';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,91 +12,103 @@ class DrawerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.read<ChatBloc>().state;
     final currentUser = context.read<AuthenticationBloc>().state.user;
-    final history = state.chatHistory;
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Drawer(
-          child: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
-              child: TextField(
-                onChanged: (value) {
-                  if (value.isEmpty) {
-                    context.read<ChatBloc>().add(const LoadChatHistory());
-                  } else {
-                    context.read<ChatBloc>().add(SearchChat(query: value));
-                  }
-                },
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15),
+
+    return BlocBuilder<HistoryBloc, HistoryState>(
+      builder: (context, state) {
+        if (state is HistoryLoadedState) {
+          return GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Drawer(
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 40, left: 10, right: 10),
+                      child: TextField(
+                        onChanged: (value) {
+                          final historyBloc = context.read<HistoryBloc>();
+                          if (value.isEmpty) {
+                            historyBloc
+                                .add(LoadChatHistory(userId: currentUser?.id));
+                          } else {
+                            historyBloc.add(
+                              SearchChat(
+                                  query: value, userId: currentUser?.id ?? ''),
+                            );
+                          }
+                        },
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(15),
+                            ),
+                          ),
+                          prefixIcon: Icon(Icons.search),
+                          hintText: 'History',
+                        ),
                       ),
                     ),
-                    prefixIcon: Icon(Icons.search),
-                    hintText: 'History'),
-              ),
-            ),
-            const Divider(),
-            state.loadHistoryState == LoadHistoryState.loaded
-                ? Flexible(
-                    child: RefreshIndicator.adaptive(
-                      onRefresh: () async {
-                        context.read<ChatBloc>().add(const LoadChatHistory());
-                      },
-                      child: ListView.builder(
-                          itemCount: history.length,
+                    const Divider(),
+                    Flexible(
+                      child: RefreshIndicator.adaptive(
+                        onRefresh: () async {
+                          context.read<HistoryBloc>().add(
+                                LoadChatHistory(userId: currentUser?.id),
+                              );
+                        },
+                        child: ListView.builder(
+                          itemCount: state.chatHistory.length,
                           itemBuilder: (context, index) {
+                            final chat = state.chatHistory[index];
                             return ListTile(
-                              title: Text(history[index].chatName),
+                              title: Text(chat.chatName),
                               onTap: () {
                                 AutoRouter.of(context)
-                                    .push(ChatRoute(chatId: history[index].id));
+                                    .push(ChatRoute(chatId: chat.id));
                               },
                             );
-                          }),
-                    ),
-                  )
-                : const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  ),
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              child: GestureDetector(
-                onTap: () {
-                  AutoRouter.of(context).push(const SettingsRoute());
-                },
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 18,
-                      child: ClipOval(
-                        child: currentUser != null &&
-                                currentUser.userImage.isNotEmpty
-                            ? Image.network(currentUser.userImage)
-                            : Image.asset(
-                                AssetsManager.userImage,
-                              ),
+                          },
+                        ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 10,
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 10),
+                      child: GestureDetector(
+                        onTap: () {
+                          AutoRouter.of(context).push(const SettingsRoute());
+                        },
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 18,
+                              child: ClipOval(
+                                child: currentUser?.userImage != null &&
+                                        currentUser!.userImage.isNotEmpty
+                                    ? Image.network(currentUser.userImage)
+                                    : Image.asset(AssetsManager.userImage),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(currentUser?.username ?? 'Guest'),
+                          ],
+                        ),
+                      ),
                     ),
-                    Text(currentUser != null ? currentUser.username : '')
                   ],
                 ),
               ),
-            )
-          ],
-        ),
-      )),
+            ),
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator.adaptive(),
+          );
+        }
+      },
     );
   }
 }

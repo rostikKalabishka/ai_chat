@@ -1,4 +1,5 @@
 import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:ai_chat/blocs/history_bloc/history_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
 import 'package:ai_chat/screens/chat/bloc/chat_bloc.dart';
@@ -36,7 +37,7 @@ class _ChatScreenState extends State<ChatScreen> {
         .read<ChatBloc>()
         .add(LoadChatInfo(chatId: widget.chatId, userId: userId));
 
-    context.read<ChatBloc>().add(LoadChatHistory(userId: userId));
+    context.read<HistoryBloc>().add(LoadChatHistory(userId: userId));
 
     super.initState();
   }
@@ -97,13 +98,13 @@ class _ChatScreenState extends State<ChatScreen> {
                               controller: _scrollController,
                               itemBuilder: (context, index) {
                                 final List<Message> messagesInChat =
-                                    state.messages;
+                                    state.chatModel.messages;
                                 return ChatWidget(
                                   isUser: messagesInChat[index].isUser,
                                   message: messagesInChat[index].message,
                                 );
                               },
-                              itemCount: state.messages.length,
+                              itemCount: state.chatModel.messages.length,
                             ),
                           ),
                           if (state.isTyping) ...[

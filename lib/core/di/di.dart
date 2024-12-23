@@ -1,4 +1,5 @@
 import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:ai_chat/blocs/history_bloc/history_bloc.dart';
 import 'package:ai_chat/core/utils/helpers/helpers.dart';
 import 'package:ai_chat/screens/auth/sign_in/bloc/sign_in_bloc.dart';
 import 'package:ai_chat/screens/auth/sign_up/bloc/sign_up_bloc.dart';
@@ -27,6 +28,10 @@ void initDi(SharedPreferences sharedPreferences) {
   getIt.registerLazySingleton<SettingsBloc>(
       () => SettingsBloc(myUserRepository: getIt<UserRepository>()));
   getIt.registerLazySingleton<ChatBloc>(() => ChatBloc(
+        myChatRepository: getIt<ChatRepository>(),
+      ));
+
+  getIt.registerLazySingleton<HistoryBloc>(() => HistoryBloc(
         myChatRepository: getIt<ChatRepository>(),
       ));
 }

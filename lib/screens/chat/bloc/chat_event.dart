@@ -13,7 +13,7 @@ class LoadChatInfo extends ChatEvent {
   final String userId;
 
   const LoadChatInfo({
-    this.chatId,
+    required this.chatId,
     required this.userId,
   });
 
@@ -33,19 +33,4 @@ class SendMessageInChat extends ChatEvent {
 
   @override
   List<Object> get props => super.props..add(userMessage);
-}
-
-class LoadChatHistory extends ChatEvent {
-  final String? userId;
-
-  const LoadChatHistory({this.userId});
-}
-
-class SearchChat extends ChatEvent {
-  final String query;
-
-  const SearchChat({required this.query});
-
-  @override
-  List<Object> get props => super.props..addAll([query]);
 }

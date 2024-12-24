@@ -1,5 +1,6 @@
 import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:ai_chat/blocs/history_bloc/history_bloc.dart';
+import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
 import 'package:ai_chat/screens/chat/bloc/chat_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:user_repository/user_repository.dart';
 
 @RoutePage()
 class ChatScreen extends StatefulWidget {
@@ -25,12 +27,20 @@ class _ChatScreenState extends State<ChatScreen> {
   late TextEditingController _textFieldController;
   late ScrollController _scrollController;
   late FocusNode focusNode;
+  final UserModel _userModel = UserModel.emptyUser;
 
   @override
   void initState() {
     _textFieldController = TextEditingController();
     _scrollController = ScrollController();
     focusNode = FocusNode();
+
+    _init();
+
+    super.initState();
+  }
+
+  void _init() {
     final String userId = context.read<AuthenticationBloc>().state.user!.id;
 
     context
@@ -38,8 +48,6 @@ class _ChatScreenState extends State<ChatScreen> {
         .add(LoadChatInfo(chatId: widget.chatId, userId: userId));
 
     context.read<HistoryBloc>().add(LoadChatHistory(userId: userId));
-
-    super.initState();
   }
 
   @override
@@ -67,18 +75,46 @@ class _ChatScreenState extends State<ChatScreen> {
                   icon: const Icon(Icons.add)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: GestureDetector(
-                  onTap: () {
-                    AutoRouter.of(context).push(const SettingsRoute());
-                  },
-                  child: CircleAvatar(
-                    radius: 18,
-                    child: ClipOval(
-                      child: Image.asset(
-                        AssetsManager.userImage,
+                child: BlocBuilder<UserBloc, UserState>(
+                  builder: (context, state) {
+                    return GestureDetector(
+                      onTap: () {
+                        if (state.userStatus == UserStatus.loaded) {
+                          // Переходимо до сторінки налаштувань лише якщо є дані користувача
+                          AutoRouter.of(context).push(
+                            SettingsRoute(userModel: state.userModel),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content:
+                                    Text('Інформація користувача недоступна')),
+                          );
+                        }
+                      },
+                      child: CircleAvatar(
+                        radius: 18,
+                        child: ClipOval(
+                          child: state.userStatus == UserStatus.loaded &&
+                                  state.userModel.userImage.isNotEmpty
+                              ? Image.network(
+                                  state.userModel.userImage,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Image.asset(
+                                    AssetsManager.userImage,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : Image.asset(
+                                  AssetsManager.userImage,
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
+                  // listener: (BuildContext context, S state) {},
                 ),
               ),
             ],

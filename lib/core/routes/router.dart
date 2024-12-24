@@ -6,6 +6,7 @@ import 'package:ai_chat/screens/onboarding/view/onboarding.dart';
 import 'package:ai_chat/screens/settings/view/settings_screen.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:user_repository/user_repository.dart';
 
 part 'router.gr.dart';
 

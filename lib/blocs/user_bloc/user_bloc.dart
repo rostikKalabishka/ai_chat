@@ -9,7 +9,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final UserRepository userRepository;
   UserBloc({required UserRepository myUserRepository})
       : userRepository = myUserRepository,
-        super(UserInitial()) {
+        super(const UserState()) {
     on<UserEvent>((event, emit) async {
       if (event is GetUser) {
         await _getUser(event, emit);
@@ -20,28 +20,30 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   Future<void> _getUser(GetUser event, emit) async {
-    if (state is! UserInfoLoading) {
-      emit(UserInfoLoading());
+    if (state.userStatus != UserStatus.loaded) {
+      emit(state.copyWith(userStatus: UserStatus.loading));
     }
     try {
       final UserModel userModel = await userRepository.getMyUser(event.userId);
-      emit(UserInfoLoaded(userModel: userModel));
+      emit(state.copyWith(userModel: userModel, userStatus: UserStatus.loaded));
     } catch (e) {
-      emit(UserInfoError(error: e));
+      emit(state.copyWith(error: e));
     }
   }
 
   Future<void> _uploadPicture(UpdateUserInfo event, emit) async {
-    if (state is! UserInfoLoading) {
-      emit(UserInfoLoading());
+    if (state.userStatus != UserStatus.loaded) {
+      emit(state.copyWith(userStatus: UserStatus.loading));
     }
     try {
       final file = await userRepository.uploadPicture(
           event.userImage, event.userModel.id);
-      emit(
-          UserInfoLoaded(userModel: event.userModel.copyWith(userImage: file)));
+
+      emit(state.copyWith(
+          userModel: event.userModel.copyWith(userImage: file),
+          userStatus: UserStatus.loaded));
     } catch (e) {
-      emit(UserInfoError(error: e));
+      emit(state.copyWith(error: e));
     }
   }
 }

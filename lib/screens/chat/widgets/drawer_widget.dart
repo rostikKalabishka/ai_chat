@@ -1,5 +1,6 @@
 import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:ai_chat/blocs/history_bloc/history_bloc.dart';
+import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
 
@@ -8,11 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DrawerWidget extends StatelessWidget {
-  const DrawerWidget({super.key});
+  const DrawerWidget({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = context.read<AuthenticationBloc>().state.user;
+    final currentUser = context.read<UserBloc>().state.userModel;
 
     return BlocBuilder<HistoryBloc, HistoryState>(
       builder: (context, state) {
@@ -31,11 +34,10 @@ class DrawerWidget extends StatelessWidget {
                           final historyBloc = context.read<HistoryBloc>();
                           if (value.isEmpty) {
                             historyBloc
-                                .add(LoadChatHistory(userId: currentUser?.id));
+                                .add(LoadChatHistory(userId: currentUser.id));
                           } else {
                             historyBloc.add(
-                              SearchChat(
-                                  query: value, userId: currentUser?.id ?? ''),
+                              SearchChat(query: value, userId: currentUser.id),
                             );
                           }
                         },
@@ -79,21 +81,21 @@ class DrawerWidget extends StatelessWidget {
                           vertical: 10, horizontal: 10),
                       child: GestureDetector(
                         onTap: () {
-                          AutoRouter.of(context).push(const SettingsRoute());
+                          AutoRouter.of(context)
+                              .push(SettingsRoute(userModel: currentUser));
                         },
                         child: Row(
                           children: [
                             CircleAvatar(
                               radius: 18,
                               child: ClipOval(
-                                child: currentUser?.userImage != null &&
-                                        currentUser!.userImage.isNotEmpty
+                                child: currentUser.userImage.isNotEmpty
                                     ? Image.network(currentUser.userImage)
                                     : Image.asset(AssetsManager.userImage),
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Text(currentUser?.username ?? 'Guest'),
+                            Text(currentUser.username),
                           ],
                         ),
                       ),

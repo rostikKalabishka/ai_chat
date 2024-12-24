@@ -1,3 +1,4 @@
+import 'package:ai_chat/blocs/theme_cubit/theme_cubit.dart';
 import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/ui.dart';
@@ -33,7 +34,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _appInfoString =
         '${packageInfo.appName} v${packageInfo.version} (${packageInfo.buildNumber})';
 
-    // print(packageInfo);
     setState(() {});
   }
 
@@ -45,6 +45,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = context.watch<ThemeCubit>().state.isDark;
     return BlocListener<SettingsBloc, SettingsState>(
       listener: (BuildContext context, state) {
         if (state is SettingsSignOutSuccessState) {
@@ -74,9 +75,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         title: userModel.username, iconData: Icons.people_alt),
                     SettingsActionCard(
                         title: userModel.email, iconData: Icons.email),
-                    const SettingsToggleCard(
+                    SettingsToggleCard(
                       title: 'Dark mode',
-                      value: false,
+                      value: isDarkTheme,
+                      onChanged: (value) => _setThemeBrightness(context, value),
                     ),
                     SettingsActionCard(
                         title: _appInfoString ?? '', iconData: Icons.info),
@@ -149,5 +151,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       barrierDismissible: true,
       builder: (context) => dialog,
     );
+  }
+
+  void _setThemeBrightness(BuildContext context, bool value) {
+    final brightness = value ? Brightness.dark : Brightness.light;
+    context.read<ThemeCubit>().setThemeBrightness(brightness);
   }
 }

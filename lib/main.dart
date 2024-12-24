@@ -1,4 +1,5 @@
 import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:ai_chat/blocs/theme_cubit/theme_cubit.dart';
 import 'package:ai_chat/configs/firebase_options.dart';
 import 'package:ai_chat/core/di/app_initializer.dart';
 import 'package:ai_chat/core/di/di.dart';
@@ -33,11 +34,15 @@ class MyApp extends StatelessWidget {
       create: (context) =>
           AuthenticationBloc(myUserRepository: getIt<UserRepository>()),
       child: AppInitializer(
-        child: MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          title: 'AI Chat',
-          theme: darkTheme,
-          routerConfig: _router.config(),
+        child: BlocBuilder<ThemeCubit, ThemeState>(
+          builder: (BuildContext context, state) {
+            return MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              title: 'AI Chat',
+              theme: state.isDark ? darkTheme : lightTheme,
+              routerConfig: _router.config(),
+            );
+          },
         ),
       ),
     );

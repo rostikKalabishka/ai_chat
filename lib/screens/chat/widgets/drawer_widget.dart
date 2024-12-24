@@ -1,4 +1,3 @@
-import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:ai_chat/blocs/history_bloc/history_bloc.dart';
 import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
@@ -57,7 +56,7 @@ class DrawerWidget extends StatelessWidget {
                       child: RefreshIndicator.adaptive(
                         onRefresh: () async {
                           context.read<HistoryBloc>().add(
-                                LoadChatHistory(userId: currentUser?.id),
+                                LoadChatHistory(userId: currentUser.id),
                               );
                         },
                         child: ListView.builder(
@@ -81,8 +80,7 @@ class DrawerWidget extends StatelessWidget {
                           vertical: 10, horizontal: 10),
                       child: GestureDetector(
                         onTap: () {
-                          AutoRouter.of(context)
-                              .push(SettingsRoute(userModel: currentUser));
+                          AutoRouter.of(context).push(const SettingsRoute());
                         },
                         child: Row(
                           children: [

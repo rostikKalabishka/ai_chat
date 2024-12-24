@@ -39,13 +39,9 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     SettingsRoute.name: (routeData) {
-      final args = routeData.argsAs<SettingsRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: SettingsScreen(
-          key: args.key,
-          userModel: args.userModel,
-        ),
+        child: const SettingsScreen(),
       );
     },
     SignInRoute.name: (routeData) {
@@ -130,40 +126,16 @@ class OnboardingRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [SettingsScreen]
-class SettingsRoute extends PageRouteInfo<SettingsRouteArgs> {
-  SettingsRoute({
-    Key? key,
-    required UserModel userModel,
-    List<PageRouteInfo>? children,
-  }) : super(
+class SettingsRoute extends PageRouteInfo<void> {
+  const SettingsRoute({List<PageRouteInfo>? children})
+      : super(
           SettingsRoute.name,
-          args: SettingsRouteArgs(
-            key: key,
-            userModel: userModel,
-          ),
           initialChildren: children,
         );
 
   static const String name = 'SettingsRoute';
 
-  static const PageInfo<SettingsRouteArgs> page =
-      PageInfo<SettingsRouteArgs>(name);
-}
-
-class SettingsRouteArgs {
-  const SettingsRouteArgs({
-    this.key,
-    required this.userModel,
-  });
-
-  final Key? key;
-
-  final UserModel userModel;
-
-  @override
-  String toString() {
-    return 'SettingsRouteArgs{key: $key, userModel: $userModel}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:ai_chat/blocs/history_bloc/history_bloc.dart';
 import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
@@ -12,7 +14,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:user_repository/user_repository.dart';
 
 @RoutePage()
 class ChatScreen extends StatefulWidget {
@@ -27,14 +28,13 @@ class _ChatScreenState extends State<ChatScreen> {
   late TextEditingController _textFieldController;
   late ScrollController _scrollController;
   late FocusNode focusNode;
-  final UserModel _userModel = UserModel.emptyUser;
 
   @override
   void initState() {
     _textFieldController = TextEditingController();
     _scrollController = ScrollController();
     focusNode = FocusNode();
-
+    log(widget.chatId.toString());
     _init();
 
     super.initState();
@@ -61,18 +61,21 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final chatId = widget.chatId;
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (BuildContext context, state) {
         return Scaffold(
           drawer: const DrawerWidget(),
           appBar: AppBar(
             actions: [
-              IconButton(
-                  onPressed: () {
-                    AutoRouter.of(context).push(ChatRoute(chatId: null));
-                  },
-                  icon: const Icon(Icons.add)),
+              chatId != null
+                  ? IconButton(
+                      onPressed: () {
+                        AutoRouter.of(context).push(ChatRoute(chatId: null));
+                      },
+                      icon: const Icon(Icons.add),
+                    )
+                  : const SizedBox.shrink(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: BlocBuilder<UserBloc, UserState>(
@@ -80,9 +83,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     return GestureDetector(
                       onTap: () {
                         if (state.userStatus == UserStatus.loaded) {
-                          // Переходимо до сторінки налаштувань лише якщо є дані користувача
                           AutoRouter.of(context).push(
-                            SettingsRoute(userModel: state.userModel),
+                            const SettingsRoute(),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -163,7 +165,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                       style:
                                           const TextStyle(color: Colors.white),
                                       controller: _textFieldController,
-                                      onSubmitted: (value) {},
+                                      //onSubmitted: (value) {},
                                       decoration:
                                           const InputDecoration.collapsed(
                                         hintText: 'How can i help you',

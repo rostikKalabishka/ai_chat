@@ -1,22 +1,47 @@
 import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
-import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
+import 'package:ai_chat/core/ui/ui.dart';
+import 'package:ai_chat/core/ui/widgets/confirmation_dialog.dart';
 import 'package:ai_chat/screens/settings/bloc/settings_bloc.dart';
 import 'package:ai_chat/screens/settings/widgets/settings_action_card.dart';
 import 'package:ai_chat/screens/settings/widgets/settings_toggle_card.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:user_repository/user_repository.dart';
 
 @RoutePage()
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({
     super.key,
   });
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  String? _appInfoString;
+
+  Future<void> _loadAppVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    _appInfoString =
+        '${packageInfo.appName} v${packageInfo.version} (${packageInfo.buildNumber})';
+
+    // print(packageInfo);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    _loadAppVersion();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,19 +65,9 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () => _uploadPicture(context, userModel),
-                      child: CircleAvatar(
+                      child: MyCircleAvatar(
+                        userImage: userModel.userImage,
                         radius: 50,
-                        child: ClipOval(
-                          child: userModel.userImage != ''
-                              ? Image.network(
-                                  userModel.userImage,
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.asset(
-                                  AssetsManager.userImage,
-                                  fit: BoxFit.cover,
-                                ),
-                        ),
                       ),
                     ),
                     SettingsActionCard(
@@ -63,16 +78,14 @@ class SettingsScreen extends StatelessWidget {
                       title: 'Dark mode',
                       value: false,
                     ),
-                    const SettingsActionCard(
-                        title: 'Application info', iconData: Icons.info),
+                    SettingsActionCard(
+                        title: _appInfoString ?? '', iconData: Icons.info),
                     SettingsActionCard(
                       title: 'Sign out',
                       iconData: Icons.login,
                       iconColor: Colors.redAccent,
                       onTap: () {
-                        context
-                            .read<SettingsBloc>()
-                            .add(SettingsSignOutEvent());
+                        _confirmSignOut(context);
                       },
                     ),
                   ],
@@ -116,5 +129,25 @@ class SettingsScreen extends StatelessWidget {
             UpdateUserInfo(userImage: croppedFile.path, userModel: userModel));
       }
     }
+  }
+
+  void _confirmSignOut(BuildContext context) {
+    final theme = Theme.of(context);
+    final dialog = ConfirmationDialog(
+      description: 'Are you sure about this?',
+      title: 'Are you sure you want to log out of your account?',
+      onConfirm: () {
+        context.read<SettingsBloc>().add(SettingsSignOutEvent());
+      },
+    );
+    if (theme.isAndroid) {
+      showDialog(context: context, builder: (context) => dialog);
+      return;
+    }
+    showCupertinoDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => dialog,
+    );
   }
 }

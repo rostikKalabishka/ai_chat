@@ -1,7 +1,9 @@
+import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
 import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
 import 'package:ai_chat/core/ui/ui.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatWidget extends StatelessWidget {
   const ChatWidget({
@@ -14,6 +16,7 @@ class ChatWidget extends StatelessWidget {
   final bool isUser;
   @override
   Widget build(BuildContext context) {
+    final currentUser = context.read<UserBloc>().state.userModel;
     final theme = Theme.of(context);
     return Column(
       children: [
@@ -24,13 +27,16 @@ class ChatWidget extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset(
-                  isUser
-                      ? AssetsManager.userImage
-                      : AssetsManager.chatLogoImage,
-                  width: 30,
-                  height: 30,
-                ),
+                isUser
+                    ? MyCircleAvatar(
+                        userImage: currentUser.userImage,
+                        radius: 15,
+                      )
+                    : Image.asset(
+                        AssetsManager.chatLogoImage,
+                        width: 30,
+                        height: 30,
+                      ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: isUser

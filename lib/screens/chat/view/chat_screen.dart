@@ -4,7 +4,7 @@ import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:ai_chat/blocs/history_bloc/history_bloc.dart';
 import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
-import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
+import 'package:ai_chat/core/ui/ui.dart';
 import 'package:ai_chat/screens/chat/bloc/chat_bloc.dart';
 import 'package:chat_repository/chat_repository.dart';
 
@@ -94,25 +94,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           );
                         }
                       },
-                      child: CircleAvatar(
+                      child: MyCircleAvatar(
+                        userImage: state.userModel.userImage,
                         radius: 18,
-                        child: ClipOval(
-                          child: state.userStatus == UserStatus.loaded &&
-                                  state.userModel.userImage.isNotEmpty
-                              ? Image.network(
-                                  state.userModel.userImage,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Image.asset(
-                                    AssetsManager.userImage,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                              : Image.asset(
-                                  AssetsManager.userImage,
-                                  fit: BoxFit.cover,
-                                ),
-                        ),
                       ),
                     );
                   },

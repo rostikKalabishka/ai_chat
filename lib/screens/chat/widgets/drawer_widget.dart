@@ -1,8 +1,7 @@
 import 'package:ai_chat/blocs/history_bloc/history_bloc.dart';
 import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
-import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
-
+import 'package:ai_chat/core/ui/ui.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -84,13 +83,9 @@ class DrawerWidget extends StatelessWidget {
                         },
                         child: Row(
                           children: [
-                            CircleAvatar(
+                            MyCircleAvatar(
+                              userImage: currentUser.userImage,
                               radius: 18,
-                              child: ClipOval(
-                                child: currentUser.userImage.isNotEmpty
-                                    ? Image.network(currentUser.userImage)
-                                    : Image.asset(AssetsManager.userImage),
-                              ),
                             ),
                             const SizedBox(width: 10),
                             Text(currentUser.username),

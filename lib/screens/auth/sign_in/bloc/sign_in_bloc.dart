@@ -1,3 +1,4 @@
+import 'package:ai_chat/core/errors/exception.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:user_repository/user_repository.dart';
@@ -23,7 +24,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       await userRepository.login(email: event.email, password: event.password);
       emit(SignInSuccessState());
     } catch (e) {
-      emit(SignInFailureState(error: e));
+      print(mapErrorToMessage(error: e));
+      emit(SignInFailureState(error: mapErrorToMessage(error: e)));
     }
   }
 }

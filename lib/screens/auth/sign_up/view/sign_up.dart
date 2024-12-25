@@ -1,4 +1,6 @@
 import 'package:ai_chat/core/routes/router.dart';
+import 'package:ai_chat/core/ui/widgets/show_error_message.dart';
+import 'package:ai_chat/core/utils/helpers/form_validator.dart';
 import 'package:ai_chat/screens/auth/sign_up/bloc/sign_up_bloc.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late TextEditingController _passwordController;
   late TextEditingController _nameController;
   late TextEditingController _confirmPasswordController;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool obscurePassword = true;
   bool obscureConfirmPassword = true;
@@ -50,6 +54,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           AutoRouter.of(context)
               .pushAndPopUntil(const LoaderRoute(), predicate: (_) => false);
         }
+        if (state is SignUpFailureState) {
+          showError(context, state.error.toString());
+        }
       },
       builder: (context, state) {
         return BlocBuilder<SignUpBloc, SignUpState>(
@@ -66,103 +73,114 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 body: SingleChildScrollView(
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.12,
-                            ),
-                            Text(
-                              'AI changes \nlives — empowering \nthe future today.',
-                              style: theme.textTheme.headlineLarge
-                                  ?.copyWith(fontSize: 35),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            FormCardWidget(
-                              child: Column(
-                                children: [
-                                  CustomTextField(
-                                      controller: _nameController,
-                                      hintText: 'name',
-                                      keyboardType: TextInputType.name),
-                                  CustomTextField(
-                                      controller: _emailController,
-                                      hintText: 'email',
-                                      keyboardType: TextInputType.emailAddress),
-                                  CustomTextField(
-                                    hintText: 'password',
-                                    controller: _passwordController,
-                                    obscureText: obscurePassword,
-                                    suffixIcon: IconButton(
-                                      icon: Icon(obscurePassword
-                                          ? Icons.visibility_outlined
-                                          : Icons.visibility_off_outlined),
-                                      onPressed: () {
-                                        setState(() {});
-                                        obscurePassword = !obscurePassword;
-                                      },
-                                    ),
-                                  ),
-                                  CustomTextField(
-                                    hintText: 'confirm password',
-                                    controller: _confirmPasswordController,
-                                    obscureText: obscureConfirmPassword,
-                                    suffixIcon: IconButton(
-                                      icon: Icon(obscureConfirmPassword
-                                          ? Icons.visibility_outlined
-                                          : Icons.visibility_off_outlined),
-                                      onPressed: () {
-                                        setState(() {});
-                                        obscureConfirmPassword =
-                                            !obscureConfirmPassword;
-                                      },
-                                    ),
-                                  )
-                                ],
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.12,
                               ),
-                            ),
-                            CustomButton(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 20, horizontal: 20),
-                              width: double.infinity,
-                              height: 100,
-                              onPressed: () {
-                                if (_passwordController.text ==
-                                    _confirmPasswordController.text) {
-                                  context.read<SignUpBloc>().add(SignUpRequired(
-                                      userName: _nameController.text,
-                                      email: _emailController.text,
-                                      password: _passwordController.text));
-                                }
+                              Text(
+                                'AI changes \nlives — empowering \nthe future today.',
+                                style: theme.textTheme.headlineLarge
+                                    ?.copyWith(fontSize: 35),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              FormCardWidget(
+                                child: Column(
+                                  children: [
+                                    CustomTextField(
+                                        validator: (value) =>
+                                            FormValidators.usernameValidator(
+                                                value),
+                                        controller: _nameController,
+                                        hintText: 'name',
+                                        keyboardType: TextInputType.name),
+                                    CustomTextField(
+                                        validator: (value) =>
+                                            FormValidators.emailValidator(
+                                                value),
+                                        controller: _emailController,
+                                        hintText: 'email',
+                                        keyboardType:
+                                            TextInputType.emailAddress),
+                                    CustomTextField(
+                                      validator: (value) =>
+                                          FormValidators.passwordValidator(
+                                              value),
+                                      hintText: 'password',
+                                      controller: _passwordController,
+                                      obscureText: obscurePassword,
+                                      suffixIcon: IconButton(
+                                        icon: Icon(obscurePassword
+                                            ? Icons.visibility_outlined
+                                            : Icons.visibility_off_outlined),
+                                        onPressed: () {
+                                          setState(() {});
+                                          obscurePassword = !obscurePassword;
+                                        },
+                                      ),
+                                    ),
+                                    CustomTextField(
+                                      validator: (value) => FormValidators
+                                          .confirmPasswordValidator(
+                                              value!, _passwordController.text),
+                                      hintText: 'confirm password',
+                                      controller: _confirmPasswordController,
+                                      obscureText: obscureConfirmPassword,
+                                      suffixIcon: IconButton(
+                                        icon: Icon(obscureConfirmPassword
+                                            ? Icons.visibility_outlined
+                                            : Icons.visibility_off_outlined),
+                                        onPressed: () {
+                                          setState(() {});
+                                          obscureConfirmPassword =
+                                              !obscureConfirmPassword;
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              CustomButton(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 20, horizontal: 20),
+                                width: double.infinity,
+                                height: 100,
+                                onPressed: () {
+                                  _registration(context);
+                                },
+                                child: Text(
+                                  'Sign up',
+                                  style: theme.textTheme.titleMedium
+                                      ?.copyWith(fontSize: 18),
+                                ),
+                              )
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: GestureDetector(
+                              onTap: () {
+                                AutoRouter.of(context).pushAndPopUntil(
+                                    const SignInRoute(),
+                                    predicate: (route) => false);
                               },
-                              child: Text(
-                                'Sign up',
-                                style: theme.textTheme.titleMedium
-                                    ?.copyWith(fontSize: 18),
+                              child: const Text(
+                                'Do you have an account already?',
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25),
-                          child: GestureDetector(
-                            onTap: () {
-                              AutoRouter.of(context).pushAndPopUntil(
-                                  const SignInRoute(),
-                                  predicate: (route) => false);
-                            },
-                            child: const Text(
-                              'Do you have an account already?',
-                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
-                        ),
-                      ]),
+                        ]),
+                  ),
                 ),
               ),
             );
@@ -170,5 +188,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
       },
     );
+  }
+
+  void _registration(BuildContext context) {
+    if (_formKey.currentState!.validate()) {
+      context.read<SignUpBloc>().add(SignUpRequired(
+          userName: _nameController.text,
+          email: _emailController.text,
+          password: _passwordController.text));
+    }
   }
 }

@@ -43,7 +43,11 @@ class _SignInScreenState extends State<SignInScreen> {
           child: Scaffold(
             appBar: AppBar(
               backgroundColor: theme.scaffoldBackgroundColor,
-              title: const Text('Sign in'),
+              title: TextWidget(
+                label: 'Sign in',
+                color: theme.textTheme.bodyLarge?.color,
+                fontSize: 24,
+              ),
             ),
             body: SingleChildScrollView(
               child: Column(

@@ -17,6 +17,7 @@ class DrawerWidget extends StatelessWidget {
 
     return BlocBuilder<HistoryBloc, HistoryState>(
       builder: (context, state) {
+        final theme = Theme.of(context);
         if (state is HistoryLoadedState) {
           return GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
@@ -50,7 +51,8 @@ class DrawerWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const Divider(),
+                    const SizedBox(height: 10),
+                    const Divider(thickness: 2),
                     Flexible(
                       child: RefreshIndicator.adaptive(
                         onRefresh: () async {
@@ -63,7 +65,13 @@ class DrawerWidget extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final chat = state.chatHistory[index];
                             return ListTile(
-                              title: Text(chat.chatName),
+                              title: TextWidget(
+                                isTextOverflow: true,
+                                label: chat.chatName,
+                                color: theme.textTheme.titleSmall?.color,
+                                fontWeight:
+                                    theme.textTheme.titleSmall?.fontWeight,
+                              ),
                               onTap: () {
                                 AutoRouter.of(context)
                                     .push(ChatRoute(chatId: chat.id));
@@ -73,7 +81,8 @@ class DrawerWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const Divider(thickness: 2),
+                    const SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 10),
@@ -88,7 +97,13 @@ class DrawerWidget extends StatelessWidget {
                               radius: 18,
                             ),
                             const SizedBox(width: 10),
-                            Text(currentUser.username),
+                            TextWidget(
+                              isTextOverflow: true,
+                              label: currentUser.username,
+                              color: theme.textTheme.titleSmall?.color,
+                              fontWeight:
+                                  theme.textTheme.titleSmall?.fontWeight,
+                            ),
                           ],
                         ),
                       ),

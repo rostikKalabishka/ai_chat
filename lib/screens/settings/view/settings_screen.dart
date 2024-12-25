@@ -54,7 +54,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(
+          title: const TextWidget(
+            label: 'Settings',
+            fontSize: 24,
+          ),
+        ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),

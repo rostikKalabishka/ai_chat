@@ -52,7 +52,7 @@ class ConfirmationDialog extends StatelessWidget {
           onPressed: () => _confirm(context),
           isDestructiveAction: true,
           child: Text(
-            'Да',
+            'Yes',
             style: TextStyle(
               color: theme.cupertinoAlertColor,
             ),
@@ -62,7 +62,7 @@ class ConfirmationDialog extends StatelessWidget {
           onPressed: () => _close(context),
           isDefaultAction: true,
           child: Text(
-            'Нет',
+            'No',
             style: TextStyle(
               color: theme.cupertinoActionColor,
             ),

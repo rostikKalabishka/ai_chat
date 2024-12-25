@@ -42,10 +42,11 @@ class ChatWidget extends StatelessWidget {
                   child: isUser
                       ? TextWidget(
                           label: message,
+                          color: theme.textTheme.titleSmall?.color,
                         )
                       : DefaultTextStyle(
-                          style: const TextStyle(
-                              color: Colors.white,
+                          style: TextStyle(
+                              color: theme.textTheme.titleSmall?.color,
                               fontWeight: FontWeight.bold,
                               fontSize: 18),
                           child: AnimatedTextKit(
@@ -66,12 +67,10 @@ class ChatWidget extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.thumb_up_alt_outlined,
-                            color: Colors.white,
                           ),
                           SizedBox(width: 5),
                           Icon(
                             Icons.thumb_down_alt_outlined,
-                            color: Colors.white,
                           )
                         ],
                       )

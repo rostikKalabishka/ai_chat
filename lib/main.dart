@@ -1,4 +1,5 @@
 import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:ai_chat/blocs/localization_bloc/localization_bloc.dart';
 import 'package:ai_chat/blocs/theme_cubit/theme_cubit.dart';
 import 'package:ai_chat/configs/firebase_options.dart';
 import 'package:ai_chat/core/di/app_initializer.dart';
@@ -23,11 +24,11 @@ Future main() async {
   );
   final sharedPreferences = await SharedPreferences.getInstance();
   initDi(sharedPreferences);
-  runApp(MyApp());
+  runApp(AIChat());
 }
 
-class MyApp extends StatelessWidget {
-  MyApp({super.key});
+class AIChat extends StatelessWidget {
+  AIChat({super.key});
   final AppRouter _router = AppRouter();
   @override
   Widget build(BuildContext context) {
@@ -35,21 +36,26 @@ class MyApp extends StatelessWidget {
       create: (context) =>
           AuthenticationBloc(myUserRepository: getIt<UserRepository>()),
       child: AppInitializer(
-        child: BlocBuilder<ThemeCubit, ThemeState>(
-          builder: (BuildContext context, state) {
-            return MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              title: 'AI Chat',
-              theme: state.isDark ? darkTheme : lightTheme,
-              routerConfig: _router.config(),
-              localizationsDelegates: const [
-                S.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              locale: Locale('de'),
-              supportedLocales: S.delegate.supportedLocales,
+        child: BlocBuilder<LocalizationBloc, LocalizationState>(
+          builder: (context, state) {
+            final localizationState = state;
+            return BlocBuilder<ThemeCubit, ThemeState>(
+              builder: (BuildContext context, state) {
+                return MaterialApp.router(
+                  debugShowCheckedModeBanner: false,
+                  title: 'AI Chat',
+                  theme: state.isDark ? darkTheme : lightTheme,
+                  routerConfig: _router.config(),
+                  localizationsDelegates: const [
+                    S.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  locale: localizationState.locale,
+                  supportedLocales: S.delegate.supportedLocales,
+                );
+              },
             );
           },
         ),

@@ -10,10 +10,11 @@ class SettingsRepository implements AbstractSettingsRepository {
   static const _languagePrefsKey = 'languagePrefs';
 
   SettingsRepository({required this.preferences});
+
   @override
   bool isDarkThemeSelected() {
     final selected = preferences.getBool(_isDarkThemeSelectedKey);
-    return selected ?? false;
+    return selected ?? true;
   }
 
   @override
@@ -24,7 +25,7 @@ class SettingsRepository implements AbstractSettingsRepository {
   @override
   Locale getLocale() {
     final languageCode = preferences.getString(_languagePrefsKey);
-    if (languageCode != null) {
+    if (languageCode != null && languageCode.isNotEmpty) {
       return Locale(languageCode);
     }
 

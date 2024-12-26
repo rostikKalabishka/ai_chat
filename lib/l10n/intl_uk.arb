@@ -35,5 +35,6 @@
   "theSuppliedAuthCredentialIsMalformedOrHasExpired": "Наданий обліковий запис неправильний або термін його дії минув",
   "unknownFirebaseErrorPleaseTryAgain": "Невідома помилка Firebase. Спробуйте ще раз",
   "areYouSureAboutThis": "Ви в цьому впевнені?",
-  "areYouSureYouWantToLogOutOfYour": "Ви впевнені, що хочете вийти зі свого облікового запису?"
+  "areYouSureYouWantToLogOutOfYour": "Ви впевнені, що хочете вийти зі свого облікового запису?",
+  "language": "Мова"
 }

@@ -1,5 +1,6 @@
 import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:ai_chat/blocs/history_bloc/history_bloc.dart';
+import 'package:ai_chat/blocs/localization_bloc/localization_bloc.dart';
 import 'package:ai_chat/blocs/theme_cubit/theme_cubit.dart';
 import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
 import 'package:ai_chat/core/di/di.dart';
@@ -33,6 +34,9 @@ class AppInitializer extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => getIt<HistoryBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<LocalizationBloc>(),
         ),
         BlocProvider(
           create: (_) => getIt<ThemeCubit>(),

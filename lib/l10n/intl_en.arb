@@ -35,5 +35,6 @@
   "theSuppliedAuthCredentialIsMalformedOrHasExpired": "The supplied auth credential is malformed or has expired",
   "unknownFirebaseErrorPleaseTryAgain": "Unknown Firebase error. Please try again",
   "areYouSureAboutThis": "Are you sure about this?",
-  "areYouSureYouWantToLogOutOfYour": "Are you sure you want to log out of your account?"
+  "areYouSureYouWantToLogOutOfYour": "Are you sure you want to log out of your account?",
+  "language": "Language"
 }

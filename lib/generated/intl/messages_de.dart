@@ -44,6 +44,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Falscher Benutzername oder falsches Passwort!"),
         "invalidEmailFormat":
             MessageLookupByLibrary.simpleMessage("Ungültiges E-Mail-Format"),
+        "language": MessageLookupByLibrary.simpleMessage("Sprache"),
         "nameHintText": MessageLookupByLibrary.simpleMessage("Name"),
         "no": MessageLookupByLibrary.simpleMessage("Nein"),
         "noUserFoundWithThisEmail": MessageLookupByLibrary.simpleMessage(

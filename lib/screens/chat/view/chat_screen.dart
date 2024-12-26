@@ -62,7 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final chatId = widget.chatId;
+
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (BuildContext context, state) {
         return GestureDetector(
@@ -73,14 +73,20 @@ class _ChatScreenState extends State<ChatScreen> {
             drawer: const DrawerWidget(),
             appBar: AppBar(
               actions: [
-                chatId != null
-                    ? IconButton(
-                        onPressed: () {
+                IconButton(
+                  onPressed: state.chatModel.messages.isNotEmpty
+                      ? () {
                           AutoRouter.of(context).push(ChatRoute(chatId: null));
-                        },
-                        icon: const Icon(Icons.add),
-                      )
-                    : const SizedBox.shrink(),
+                        }
+                      : null,
+                  icon: Icon(
+                    Icons.add_circle_outlined,
+                    color: state.chatModel.messages.isNotEmpty
+                        ? null
+                        : Colors.grey[800],
+                    size: 32,
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: BlocBuilder<UserBloc, UserState>(

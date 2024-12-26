@@ -45,6 +45,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Неправильне ім\'я користувача або пароль!"),
         "invalidEmailFormat": MessageLookupByLibrary.simpleMessage(
             "Невірний формат електронної адреси"),
+        "language": MessageLookupByLibrary.simpleMessage("Мова"),
         "nameHintText": MessageLookupByLibrary.simpleMessage("ім\'я"),
         "no": MessageLookupByLibrary.simpleMessage("Ні"),
         "noUserFoundWithThisEmail": MessageLookupByLibrary.simpleMessage(

@@ -1,3 +1,4 @@
+import 'package:ai_chat/blocs/localization_bloc/localization_bloc.dart';
 import 'package:ai_chat/blocs/theme_cubit/theme_cubit.dart';
 import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
@@ -6,6 +7,7 @@ import 'package:ai_chat/core/ui/widgets/confirmation_dialog.dart';
 import 'package:ai_chat/generated/l10n.dart';
 import 'package:ai_chat/screens/settings/bloc/settings_bloc.dart';
 import 'package:ai_chat/screens/settings/widgets/settings_action_card.dart';
+import 'package:ai_chat/screens/settings/widgets/settings_drop_down_card.dart';
 import 'package:ai_chat/screens/settings/widgets/settings_toggle_card.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
@@ -47,6 +49,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = context.watch<ThemeCubit>().state.isDark;
+    final localizationState = context.read<LocalizationBloc>().state;
     return BlocListener<SettingsBloc, SettingsState>(
       listener: (BuildContext context, state) {
         if (state is SettingsSignOutSuccessState) {
@@ -88,6 +91,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     SettingsActionCard(
                         title: _appInfoString ?? '', iconData: Icons.info),
+                    SettingsDropDownCard(
+                      title: S.of(context).language,
+                      selectedLocale: localizationState.locale,
+                    ),
                     SettingsActionCard(
                       title: S.of(context).signOut,
                       iconData: Icons.login,

@@ -35,5 +35,6 @@
   "theSuppliedAuthCredentialIsMalformedOrHasExpired": "Die bereitgestellten Authentifizierungsdaten sind ungültig oder abgelaufen",
   "unknownFirebaseErrorPleaseTryAgain": "Unbekannter Firebase-Fehler. Bitte versuchen Sie es erneut",
   "areYouSureAboutThis": "Sind Sie sich da sicher?",
-  "areYouSureYouWantToLogOutOfYour": "Sind Sie sicher, dass Sie sich von Ihrem Konto abmelden möchten?"
+  "areYouSureYouWantToLogOutOfYour": "Sind Sie sicher, dass Sie sich von Ihrem Konto abmelden möchten?",
+  "language": "Sprache"
 }

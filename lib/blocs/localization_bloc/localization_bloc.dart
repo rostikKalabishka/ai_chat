@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:ai_chat/generated/l10n.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:settings_repository/settings_repository.dart';
@@ -29,16 +28,6 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
   }
 
   static Locale _determineInitialLocale(SettingsRepository settingsRepository) {
-    final deviceLocale = PlatformDispatcher.instance.locale;
-
-    final supportedLocales = S.delegate.supportedLocales;
-
-    for (var supportedLocale in supportedLocales) {
-      if (supportedLocale.languageCode == deviceLocale.languageCode) {
-        return supportedLocale;
-      }
-    }
-
     final savedLocale = settingsRepository.getLocale();
 
     return savedLocale;

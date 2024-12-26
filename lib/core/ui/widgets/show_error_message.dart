@@ -1,4 +1,5 @@
 import 'package:ai_chat/core/ui/ui.dart';
+import 'package:ai_chat/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,11 +14,11 @@ void showError(BuildContext context, String errorMessage) {
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: const Text('Error'),
+          title: Text(S.of(context).error),
           content: Text(errorMessage),
           actions: [
             CupertinoDialogAction(
-              child: const Text('OK'),
+              child: Text(S.of(context).ok),
               onPressed: () {
                 Navigator.pop(context);
               },

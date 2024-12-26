@@ -3,7 +3,8 @@ import 'package:ai_chat/blocs/theme_cubit/theme_cubit.dart';
 import 'package:ai_chat/configs/firebase_options.dart';
 import 'package:ai_chat/core/di/app_initializer.dart';
 import 'package:ai_chat/core/di/di.dart';
-
+import 'package:ai_chat/generated/l10n.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,6 +42,14 @@ class MyApp extends StatelessWidget {
               title: 'AI Chat',
               theme: state.isDark ? darkTheme : lightTheme,
               routerConfig: _router.config(),
+              localizationsDelegates: const [
+                S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              locale: Locale('de'),
+              supportedLocales: S.delegate.supportedLocales,
             );
           },
         ),

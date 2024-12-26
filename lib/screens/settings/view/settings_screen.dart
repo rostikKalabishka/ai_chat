@@ -3,6 +3,7 @@ import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/ui.dart';
 import 'package:ai_chat/core/ui/widgets/confirmation_dialog.dart';
+import 'package:ai_chat/generated/l10n.dart';
 import 'package:ai_chat/screens/settings/bloc/settings_bloc.dart';
 import 'package:ai_chat/screens/settings/widgets/settings_action_card.dart';
 import 'package:ai_chat/screens/settings/widgets/settings_toggle_card.dart';
@@ -55,8 +56,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const TextWidget(
-            label: 'Settings',
+          title: TextWidget(
+            label: S.of(context).settings,
             fontSize: 24,
           ),
         ),
@@ -81,14 +82,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     SettingsActionCard(
                         title: userModel.email, iconData: Icons.email),
                     SettingsToggleCard(
-                      title: 'Dark mode',
+                      title: S.of(context).darkMode,
                       value: isDarkTheme,
                       onChanged: (value) => _setThemeBrightness(context, value),
                     ),
                     SettingsActionCard(
                         title: _appInfoString ?? '', iconData: Icons.info),
                     SettingsActionCard(
-                      title: 'Sign out',
+                      title: S.of(context).signOut,
                       iconData: Icons.login,
                       iconColor: Colors.redAccent,
                       onTap: () {
@@ -141,8 +142,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _confirmSignOut(BuildContext context) {
     final theme = Theme.of(context);
     final dialog = ConfirmationDialog(
-      description: 'Are you sure about this?',
-      title: 'Are you sure you want to log out of your account?',
+      description: S.of(context).areYouSureAboutThis,
+      title: S.of(context).areYouSureYouWantToLogOutOfYour,
       onConfirm: () {
         context.read<SettingsBloc>().add(SettingsSignOutEvent());
       },

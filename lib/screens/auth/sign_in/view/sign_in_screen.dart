@@ -1,6 +1,8 @@
+import 'package:ai_chat/core/errors/exception.dart';
 import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/widgets/show_error_message.dart';
 import 'package:ai_chat/core/utils/helpers/form_validator.dart';
+import 'package:ai_chat/generated/l10n.dart';
 import 'package:ai_chat/screens/auth/sign_in/bloc/sign_in_bloc.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +50,7 @@ class _SignInScreenState extends State<SignInScreen> {
             appBar: AppBar(
               backgroundColor: theme.scaffoldBackgroundColor,
               title: TextWidget(
-                label: 'Sign in',
+                label: S.of(context).signIn,
                 color: theme.textTheme.bodyLarge?.color,
                 fontSize: 24,
               ),
@@ -66,7 +68,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           height: MediaQuery.of(context).size.height * 0.18,
                         ),
                         Text(
-                          'AI changes \nlives — empowering \nthe future today.',
+                          S.of(context).slogan,
                           style: theme.textTheme.headlineLarge
                               ?.copyWith(fontSize: 35),
                         ),
@@ -78,15 +80,17 @@ class _SignInScreenState extends State<SignInScreen> {
                             children: [
                               CustomTextField(
                                   validator: (value) =>
-                                      FormValidators.emailValidator(value),
+                                      FormValidators.emailValidator(
+                                          value, context),
                                   controller: _emailController,
-                                  hintText: 'email',
+                                  hintText: S.of(context).emailHintText,
                                   keyboardType: TextInputType.emailAddress),
                               CustomTextField(
-                                hintText: 'password',
+                                hintText: S.of(context).passwordHintText,
                                 controller: _passwordController,
                                 validator: (value) =>
-                                    FormValidators.passwordValidator(value),
+                                    FormValidators.passwordValidator(
+                                        value, context),
                                 obscureText: obscurePassword,
                                 suffixIcon: IconButton(
                                   icon: Icon(obscurePassword
@@ -110,7 +114,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             _signIn(context);
                           },
                           child: Text(
-                            'Sign in',
+                            S.of(context).signIn,
                             style: theme.textTheme.titleMedium
                                 ?.copyWith(fontSize: 18),
                           ),
@@ -125,9 +129,10 @@ class _SignInScreenState extends State<SignInScreen> {
                               const SignUpRoute(),
                               predicate: (route) => false);
                         },
-                        child: const Text(
-                          'You don`t have account?',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        child: TextWidget(
+                          label: S.of(context).youDontHaveAccount,
+                          color: theme.textTheme.titleMedium?.color,
+                          fontSize: 16,
                         ),
                       ),
                     ),
@@ -144,7 +149,8 @@ class _SignInScreenState extends State<SignInScreen> {
               .pushAndPopUntil(const LoaderRoute(), predicate: (_) => false);
         }
         if (state is SignInFailureState) {
-          showError(context, state.error.toString());
+          showError(
+              context, mapErrorToMessage(error: state.error, context: context));
         }
       },
     );

@@ -5,6 +5,7 @@ import 'package:ai_chat/blocs/history_bloc/history_bloc.dart';
 import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/ui.dart';
+import 'package:ai_chat/generated/l10n.dart';
 import 'package:ai_chat/screens/chat/bloc/chat_bloc.dart';
 import 'package:chat_repository/chat_repository.dart';
 
@@ -141,15 +142,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                     Expanded(
                                       child: TextField(
                                         focusNode: focusNode,
-                                        // style:
-                                        //     const TextStyle(color: Colors.white),
                                         controller: _textFieldController,
                                         onSubmitted: (value) {
                                           _sendMessage(context);
                                         },
-                                        decoration:
-                                            const InputDecoration.collapsed(
-                                          hintText: 'How can i help you',
+                                        decoration: InputDecoration.collapsed(
+                                          hintText: S
+                                              .of(context)
+                                              .howCanIHelpYouHintText,
                                         ),
                                       ),
                                     ),
@@ -194,7 +194,7 @@ class _ChatScreenState extends State<ChatScreen> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Інформація користувача недоступна')),
+        const SnackBar(content: Text('User information is not available')),
       );
     }
   }

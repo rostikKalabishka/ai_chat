@@ -2,6 +2,7 @@ import 'package:ai_chat/blocs/history_bloc/history_bloc.dart';
 import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/ui.dart';
+import 'package:ai_chat/generated/l10n.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,14 +41,14 @@ class DrawerWidget extends StatelessWidget {
                             );
                           }
                         },
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(15),
                             ),
                           ),
-                          prefixIcon: Icon(Icons.search),
-                          hintText: 'History',
+                          prefixIcon: const Icon(Icons.search),
+                          hintText: S.of(context).search,
                         ),
                       ),
                     ),

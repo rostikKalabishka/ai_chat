@@ -1,6 +1,8 @@
+import 'package:ai_chat/core/errors/exception.dart';
 import 'package:ai_chat/core/routes/router.dart';
 import 'package:ai_chat/core/ui/widgets/show_error_message.dart';
 import 'package:ai_chat/core/utils/helpers/form_validator.dart';
+import 'package:ai_chat/generated/l10n.dart';
 import 'package:ai_chat/screens/auth/sign_up/bloc/sign_up_bloc.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +57,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               .pushAndPopUntil(const LoaderRoute(), predicate: (_) => false);
         }
         if (state is SignUpFailureState) {
-          showError(context, state.error.toString());
+          showError(
+              context, mapErrorToMessage(error: state.error, context: context));
         }
       },
       builder: (context, state) {
@@ -67,7 +70,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 appBar: AppBar(
                   backgroundColor: theme.scaffoldBackgroundColor,
                   title: TextWidget(
-                    label: 'Sign up',
+                    label: S.of(context).signUp,
                     color: theme.textTheme.bodyLarge?.color,
                     fontSize: 24,
                   ),
@@ -86,7 +89,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     MediaQuery.of(context).size.height * 0.12,
                               ),
                               Text(
-                                'AI changes \nlives — empowering \nthe future today.',
+                                S.of(context).slogan,
                                 style: theme.textTheme.headlineLarge
                                     ?.copyWith(fontSize: 35),
                               ),
@@ -99,23 +102,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     CustomTextField(
                                         validator: (value) =>
                                             FormValidators.usernameValidator(
-                                                value),
+                                                value, context),
                                         controller: _nameController,
-                                        hintText: 'name',
+                                        hintText: S.of(context).nameHintText,
                                         keyboardType: TextInputType.name),
                                     CustomTextField(
                                         validator: (value) =>
                                             FormValidators.emailValidator(
-                                                value),
+                                                value, context),
                                         controller: _emailController,
-                                        hintText: 'email',
+                                        hintText: S.of(context).emailHintText,
                                         keyboardType:
                                             TextInputType.emailAddress),
                                     CustomTextField(
                                       validator: (value) =>
                                           FormValidators.passwordValidator(
-                                              value),
-                                      hintText: 'password',
+                                              value, context),
+                                      hintText: S.of(context).passwordHintText,
                                       controller: _passwordController,
                                       obscureText: obscurePassword,
                                       suffixIcon: IconButton(
@@ -131,8 +134,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     CustomTextField(
                                       validator: (value) => FormValidators
                                           .confirmPasswordValidator(
-                                              value!, _passwordController.text),
-                                      hintText: 'confirm password',
+                                              value!,
+                                              _passwordController.text,
+                                              context),
+                                      hintText:
+                                          S.of(context).confirmPasswordHintText,
                                       controller: _confirmPasswordController,
                                       obscureText: obscureConfirmPassword,
                                       suffixIcon: IconButton(
@@ -158,7 +164,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   _registration(context);
                                 },
                                 child: Text(
-                                  'Sign up',
+                                  S.of(context).signUp,
                                   style: theme.textTheme.titleMedium
                                       ?.copyWith(fontSize: 18),
                                 ),
@@ -173,9 +179,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     const SignInRoute(),
                                     predicate: (route) => false);
                               },
-                              child: const Text(
-                                'Do you have an account already?',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                              child: TextWidget(
+                                label: S.of(context).doYouHaveAnAccountAlready,
+                                color: theme.textTheme.titleMedium?.color,
+                                fontSize: 16,
                               ),
                             ),
                           ),

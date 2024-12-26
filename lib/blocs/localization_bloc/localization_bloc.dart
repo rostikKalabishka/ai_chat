@@ -1,13 +1,28 @@
+import 'dart:ui';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:settings_repository/settings_repository.dart';
 
 part 'localization_event.dart';
 part 'localization_state.dart';
 
 class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
-  LocalizationBloc() : super(LocalizationInitial()) {
-    on<LocalizationEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+  final SettingsRepository _settingsRepository;
+
+  LocalizationBloc({required SettingsRepository settingsRepository})
+      : _settingsRepository = settingsRepository,
+        super(LocalizationState(settingsRepository.getLocale())) {
+    on<ChangeLocaleEvent>(_onChangeLocale);
+  }
+
+  Future<void> _onChangeLocale(
+    ChangeLocaleEvent event,
+    Emitter<LocalizationState> emit,
+  ) async {
+    // Збереження нової локалі в налаштуваннях
+    await _settingsRepository.setLocale(event.locale);
+    // Еміт нового стану
+    emit(LocalizationState(event.locale));
   }
 }

@@ -6,3 +6,11 @@ sealed class LocalizationEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class ChangeLocaleEvent extends LocalizationEvent {
+  const ChangeLocaleEvent(this.locale);
+  final Locale locale;
+
+  @override
+  List<Object> get props => [locale];
+}

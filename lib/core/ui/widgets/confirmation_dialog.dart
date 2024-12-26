@@ -1,4 +1,5 @@
 import 'package:ai_chat/core/ui/ui.dart';
+import 'package:ai_chat/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -30,13 +31,13 @@ class ConfirmationDialog extends StatelessWidget {
           TextButton(
             onPressed: () => _confirm(context),
             child: Text(
-              'Yes',
+              S.of(context).yes,
               style: TextStyle(color: theme.hintColor),
             ),
           ),
           TextButton(
             onPressed: () => _close(context),
-            child: const Text('No'),
+            child: Text(S.of(context).no),
           ),
         ],
       );
@@ -52,7 +53,7 @@ class ConfirmationDialog extends StatelessWidget {
           onPressed: () => _confirm(context),
           isDestructiveAction: true,
           child: Text(
-            'Yes',
+            S.of(context).yes,
             style: TextStyle(
               color: theme.cupertinoAlertColor,
             ),
@@ -62,7 +63,7 @@ class ConfirmationDialog extends StatelessWidget {
           onPressed: () => _close(context),
           isDefaultAction: true,
           child: Text(
-            'No',
+            S.of(context).no,
             style: TextStyle(
               color: theme.cupertinoActionColor,
             ),

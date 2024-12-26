@@ -1,4 +1,6 @@
+import 'package:ai_chat/generated/l10n.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 enum ApiClientExceptionType { network, auth, other }
 
@@ -8,38 +10,39 @@ class ApiClientException implements Exception {
   ApiClientException(this.type);
 }
 
-String mapErrorToMessage({required Object error}) {
+String mapErrorToMessage(
+    {required Object error, required BuildContext context}) {
   if (error is ApiClientException) {
     switch (error.type) {
       case ApiClientExceptionType.network:
-        return 'The server is not available. Check your internet connection';
+        return S.of(context).theServerIsNotAvailableCheckYourInternetConnection;
       case ApiClientExceptionType.auth:
-        return 'Incorrect username or password!';
+        return S.of(context).incorrectUsernameOrPassword;
       case ApiClientExceptionType.other:
-        return 'There has been an error. Try again';
+        return S.of(context).thereHasBeenAnErrorTryAgain;
     }
   }
 
   if (error is FirebaseAuthException) {
     switch (error.code) {
       case 'invalid-email':
-        return 'Invalid email format';
+        return S.of(context).invalidEmailFormat;
       case 'user-not-found':
-        return 'No user found with this email';
+        return S.of(context).noUserFoundWithThisEmail;
       case 'wrong-password':
-        return 'Incorrect password';
+        return S.of(context).incorrectPassword;
       case 'account-exists-with-different-credential':
-        return 'An account already exists with different credentials';
+        return S.of(context).anAccountAlreadyExistsWithDifferentCredentials;
       case 'email-already-in-use':
-        return 'This email is already in use';
+        return S.of(context).thisEmailIsAlreadyInUse;
       case 'operation-not-allowed':
-        return 'Operation not allowed';
+        return S.of(context).operationNotAllowed;
       case 'weak-password':
-        return 'Password should be at least 8 characters';
+        return S.of(context).passwordShouldBeAtLeast8Characters;
       case 'invalid-credential':
-        return 'The supplied auth credential is malformed or has expired';
+        return S.of(context).theSuppliedAuthCredentialIsMalformedOrHasExpired;
       default:
-        return 'Unknown Firebase error. Please try again';
+        return S.of(context).unknownFirebaseErrorPleaseTryAgain;
     }
   }
 

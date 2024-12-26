@@ -32,7 +32,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   String? _appInfoString;
-  String _userModel = '${dotenv.env['MODEL']}';
+  final String _userModel = '${dotenv.env['MODEL']}';
 
   Future<void> _loadAppVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();
@@ -61,6 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: TextWidget(
             label: S.of(context).settings,
             fontSize: 24,

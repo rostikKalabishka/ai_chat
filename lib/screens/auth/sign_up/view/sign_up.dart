@@ -68,6 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               onTap: () => FocusScope.of(context).unfocus(),
               child: Scaffold(
                 appBar: AppBar(
+                  centerTitle: true,
                   backgroundColor: theme.scaffoldBackgroundColor,
                   title: TextWidget(
                     label: S.of(context).signUp,

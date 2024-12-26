@@ -7,10 +7,32 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DrawerWidget extends StatelessWidget {
+class DrawerWidget extends StatefulWidget {
   const DrawerWidget({
     super.key,
   });
+
+  @override
+  State<DrawerWidget> createState() => _DrawerWidgetState();
+}
+
+class _DrawerWidgetState extends State<DrawerWidget> {
+  final _textEditingController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final historyBloc = context.read<HistoryBloc>();
+    historyBloc.add(
+        LoadChatHistory(userId: context.read<UserBloc>().state.userModel.id));
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +52,13 @@ class DrawerWidget extends StatelessWidget {
                       padding:
                           const EdgeInsets.only(top: 40, left: 10, right: 10),
                       child: TextField(
+                        controller: _textEditingController,
                         onChanged: (value) {
                           final historyBloc = context.read<HistoryBloc>();
                           if (value.isEmpty) {
-                            historyBloc
-                                .add(LoadChatHistory(userId: currentUser.id));
+                            historyBloc.add(
+                              LoadChatHistory(userId: currentUser.id),
+                            );
                           } else {
                             historyBloc.add(
                               SearchChat(query: value, userId: currentUser.id),

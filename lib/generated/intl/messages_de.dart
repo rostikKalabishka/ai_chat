@@ -49,7 +49,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "no": MessageLookupByLibrary.simpleMessage("Nein"),
         "noUserFoundWithThisEmail": MessageLookupByLibrary.simpleMessage(
             "Kein Benutzer mit dieser E-Mail gefunden"),
-        "ok": MessageLookupByLibrary.simpleMessage("OK"),
+        "ok": MessageLookupByLibrary.simpleMessage("Ok"),
         "operationNotAllowed":
             MessageLookupByLibrary.simpleMessage("Operation nicht erlaubt"),
         "passwordHintText": MessageLookupByLibrary.simpleMessage("Passwort"),

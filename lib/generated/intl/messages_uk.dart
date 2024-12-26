@@ -50,7 +50,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "no": MessageLookupByLibrary.simpleMessage("Ні"),
         "noUserFoundWithThisEmail": MessageLookupByLibrary.simpleMessage(
             "Користувача з такою електронною адресою не знайдено"),
-        "ok": MessageLookupByLibrary.simpleMessage("OK"),
+        "ok": MessageLookupByLibrary.simpleMessage("Ок"),
         "operationNotAllowed":
             MessageLookupByLibrary.simpleMessage("Операція заборонена"),
         "passwordHintText": MessageLookupByLibrary.simpleMessage("пароль"),

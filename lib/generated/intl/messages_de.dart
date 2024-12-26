@@ -84,6 +84,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "unknownFirebaseErrorPleaseTryAgain":
             MessageLookupByLibrary.simpleMessage(
                 "Unbekannter Firebase-Fehler. Bitte versuchen Sie es erneut"),
+        "usedModel": MessageLookupByLibrary.simpleMessage("Modell"),
         "yes": MessageLookupByLibrary.simpleMessage("Ja"),
         "youDontHaveAccount":
             MessageLookupByLibrary.simpleMessage("Sie haben noch kein Konto?"),

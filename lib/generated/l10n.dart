@@ -429,6 +429,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Model`
+  String get usedModel {
+    return Intl.message(
+      'Model',
+      name: 'usedModel',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

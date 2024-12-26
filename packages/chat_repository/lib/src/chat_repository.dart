@@ -14,7 +14,7 @@ class ChatRepository implements AbstractChatRepository {
   late final GenerativeModel _model;
   ChatRepository() {
     _model = GenerativeModel(
-      model: 'gemini-1.5-flash-latest',
+      model: '${dotenv.env['MODEL']}',
       apiKey: '${dotenv.env['API_KEY']}',
     );
   }

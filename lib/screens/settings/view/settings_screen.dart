@@ -13,6 +13,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -31,6 +32,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   String? _appInfoString;
+  String _userModel = '${dotenv.env['MODEL']}';
 
   Future<void> _loadAppVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();
@@ -84,13 +86,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         title: userModel.username, iconData: Icons.people_alt),
                     SettingsActionCard(
                         title: userModel.email, iconData: Icons.email),
+                    SettingsActionCard(
+                        title: _appInfoString ?? '', iconData: Icons.info),
+                    SettingsActionCard(
+                        title: '${S.of(context).usedModel} : $_userModel',
+                        iconData: Icons.computer),
                     SettingsToggleCard(
                       title: S.of(context).darkMode,
                       value: isDarkTheme,
                       onChanged: (value) => _setThemeBrightness(context, value),
                     ),
-                    SettingsActionCard(
-                        title: _appInfoString ?? '', iconData: Icons.info),
                     SettingsDropDownCard(
                       title: S.of(context).language,
                       selectedLocale: localizationState.locale,

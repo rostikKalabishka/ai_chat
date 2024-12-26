@@ -36,5 +36,6 @@
   "unknownFirebaseErrorPleaseTryAgain": "Невідома помилка Firebase. Спробуйте ще раз",
   "areYouSureAboutThis": "Ви в цьому впевнені?",
   "areYouSureYouWantToLogOutOfYour": "Ви впевнені, що хочете вийти зі свого облікового запису?",
-  "language": "Мова"
+  "language": "Мова",
+  "usedModel": "Модель"
 }

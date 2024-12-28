@@ -37,5 +37,6 @@
   "areYouSureAboutThis": "Ви в цьому впевнені?",
   "areYouSureYouWantToLogOutOfYour": "Ви впевнені, що хочете вийти зі свого облікового запису?",
   "language": "Мова",
-  "usedModel": "Модель"
+  "usedModel": "Модель",
+  "delete": "Видалити"
 }

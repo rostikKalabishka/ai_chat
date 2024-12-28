@@ -32,6 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "confirmPasswordHintText":
             MessageLookupByLibrary.simpleMessage("Passwort bestätigen"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Dunkler Modus"),
+        "delete": MessageLookupByLibrary.simpleMessage("Löschen"),
         "doYouHaveAnAccountAlready":
             MessageLookupByLibrary.simpleMessage("Haben Sie schon ein Konto?"),
         "emailHintText": MessageLookupByLibrary.simpleMessage("E-Mail"),

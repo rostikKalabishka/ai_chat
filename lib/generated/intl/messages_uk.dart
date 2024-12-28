@@ -32,6 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "confirmPasswordHintText":
             MessageLookupByLibrary.simpleMessage("підтвердьте пароль"),
         "darkMode": MessageLookupByLibrary.simpleMessage("Темний режим"),
+        "delete": MessageLookupByLibrary.simpleMessage("Видалити"),
         "doYouHaveAnAccountAlready":
             MessageLookupByLibrary.simpleMessage("У вас вже є акаунт?"),
         "emailHintText":

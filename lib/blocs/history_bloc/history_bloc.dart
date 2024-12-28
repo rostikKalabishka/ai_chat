@@ -69,15 +69,13 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     }
 
     try {
-      if (state is HistoryLoadedState) {
-        final currentHistory = (state as HistoryLoadedState).chatHistory;
+      final currentHistory = (state as HistoryLoadedState).chatHistory;
 
-        final updatedHistory =
-            currentHistory.where((chat) => chat.id != event.chatId).toList();
+      final updatedHistory =
+          currentHistory.where((chat) => chat.id != event.chatId).toList();
 
-        await chatRepository.deleteChat(chatId: event.chatId);
-        emit(HistoryLoadedState(chatHistory: updatedHistory));
-      }
+      await chatRepository.deleteChat(chatId: event.chatId);
+      emit(HistoryLoadedState(chatHistory: updatedHistory));
     } catch (e) {
       log(e.toString());
       emit(HistoryErrorState(error: e));

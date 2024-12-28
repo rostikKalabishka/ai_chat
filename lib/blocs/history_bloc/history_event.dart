@@ -25,3 +25,16 @@ class SearchChat extends HistoryEvent {
   @override
   List<Object> get props => super.props..addAll([query, userId]);
 }
+
+class DeleteChat extends HistoryEvent {
+  final String chatId;
+
+  const DeleteChat({
+    required this.chatId,
+  });
+  @override
+  List<Object> get props => super.props
+    ..addAll([
+      chatId,
+    ]);
+}

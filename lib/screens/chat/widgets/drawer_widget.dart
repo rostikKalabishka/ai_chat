@@ -6,6 +6,7 @@ import 'package:ai_chat/generated/l10n.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({
@@ -89,18 +90,46 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           itemCount: state.chatHistory.length,
                           itemBuilder: (context, index) {
                             final chat = state.chatHistory[index];
-                            return ListTile(
-                              title: TextWidget(
-                                isTextOverflow: true,
-                                label: chat.chatName,
-                                color: theme.textTheme.titleSmall?.color,
-                                fontWeight:
-                                    theme.textTheme.titleSmall?.fontWeight,
+                            return Slidable(
+                              key: ValueKey(chat.id),
+                              endActionPane: ActionPane(
+                                motion: const ScrollMotion(),
+                                children: [
+                                  SlidableAction(
+                                    flex: 2,
+                                    onPressed: (context) {
+                                      context
+                                          .read<HistoryBloc>()
+                                          .add(DeleteChat(chatId: chat.id));
+                                    },
+                                    backgroundColor: Color(0xFFFE4A49),
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.delete,
+                                    label: 'Delete',
+                                  ),
+                                  SlidableAction(
+                                    flex: 2,
+                                    onPressed: (context) {},
+                                    backgroundColor: Color(0xFF21B7CA),
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.security,
+                                    label: 'Add security',
+                                  ),
+                                ],
                               ),
-                              onTap: () {
-                                AutoRouter.of(context)
-                                    .push(ChatRoute(chatId: chat.id));
-                              },
+                              child: ListTile(
+                                title: TextWidget(
+                                  isTextOverflow: true,
+                                  label: chat.chatName,
+                                  color: theme.textTheme.titleSmall?.color,
+                                  fontWeight:
+                                      theme.textTheme.titleSmall?.fontWeight,
+                                ),
+                                onTap: () {
+                                  AutoRouter.of(context)
+                                      .push(ChatRoute(chatId: chat.id));
+                                },
+                              ),
                             );
                           },
                         ),

@@ -19,6 +19,8 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
         await _loadHistory(event, emit);
       } else if (event is SearchChat) {
         await _searchChat(event, emit);
+      } else if (event is DeleteChat) {
+        await _deleteChat(event, emit);
       }
     });
   }
@@ -55,6 +57,27 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
         completer.complete();
       });
       await completer.future;
+    } catch (e) {
+      log(e.toString());
+      emit(HistoryErrorState(error: e));
+    }
+  }
+
+  Future<void> _deleteChat(DeleteChat event, emit) async {
+    if (state is! HistoryLoadedState) {
+      emit(HistoryLoadingState());
+    }
+
+    try {
+      if (state is HistoryLoadedState) {
+        final currentHistory = (state as HistoryLoadedState).chatHistory;
+
+        final updatedHistory =
+            currentHistory.where((chat) => chat.id != event.chatId).toList();
+
+        await chatRepository.deleteChat(chatId: event.chatId);
+        emit(HistoryLoadedState(chatHistory: updatedHistory));
+      }
     } catch (e) {
       log(e.toString());
       emit(HistoryErrorState(error: e));

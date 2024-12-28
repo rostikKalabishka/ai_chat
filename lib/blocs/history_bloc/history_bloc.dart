@@ -10,6 +10,7 @@ part 'history_state.dart';
 
 class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   final ChatRepository chatRepository;
+  StreamSubscription<List<ChatModel>>? _historySubscription;
   Timer? searchDebounce;
   HistoryBloc({required ChatRepository myChatRepository})
       : chatRepository = myChatRepository,
@@ -23,17 +24,29 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
         await _deleteChat(event, emit);
       }
     });
+
+    on<ChatHistoryUpdated>((event, emit) {
+      emit(HistoryLoadedState(chatHistory: event.chatHistory));
+    });
   }
 
   Future<void> _loadHistory(LoadChatHistory event, emit) async {
+    if (_historySubscription != null) {
+      _historySubscription!.cancel();
+    }
     if (state is! HistoryLoadedState) {
       emit(HistoryLoadingState());
     }
     try {
-      final history =
-          await chatRepository.getHistoryCurrentUser(userId: event.userId!);
+      // final history =
+      //     await chatRepository.getHistoryCurrentUser(userId: event.userId!);
 
-      emit(HistoryLoadedState(chatHistory: history));
+      final history = await chatRepository
+          .getHistoryStream(userId: event.userId)
+          .listen((chatHistory) {
+        add(ChatHistoryUpdated(chatHistory: chatHistory));
+      });
+      // emit(HistoryLoadedState(chatHistory: history));
     } catch (e) {
       log(e.toString());
       emit(HistoryErrorState(error: e));

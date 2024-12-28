@@ -173,4 +173,22 @@ class ChatRepository implements AbstractChatRepository {
       rethrow;
     }
   }
+
+  @override
+  Stream<List<ChatModel>> getHistoryStream({required String userId}) {
+    try {
+      return _chatsCollection
+          .where("userCreatorChat", isEqualTo: userId)
+          //  .orderBy('updateAt', descending: true)
+          .snapshots()
+          .map((snapshot) {
+        return snapshot.docs
+            .map((doc) => ChatModel.fromJson(doc.data()))
+            .toList();
+      });
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }

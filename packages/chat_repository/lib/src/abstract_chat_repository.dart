@@ -17,4 +17,6 @@ abstract interface class AbstractChatRepository {
 
   Future<List<ChatModel>> searchChat(
       {required String userId, required String query});
+
+  Stream<List<ChatModel>> getHistoryStream({required String userId});
 }

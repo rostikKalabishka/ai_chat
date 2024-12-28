@@ -59,21 +59,21 @@ class ChatWidget extends StatelessWidget {
                               ]),
                         ),
                 ),
-                isUser
-                    ? const SizedBox.shrink()
-                    : const Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.thumb_up_alt_outlined,
-                          ),
-                          SizedBox(width: 5),
-                          Icon(
-                            Icons.thumb_down_alt_outlined,
-                          )
-                        ],
-                      )
+                // isUser
+                //     ? const SizedBox.shrink()
+                //     : const Row(
+                //         mainAxisAlignment: MainAxisAlignment.end,
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           Icon(
+                //             Icons.thumb_up_alt_outlined,
+                //           ),
+                //           SizedBox(width: 5),
+                //           Icon(
+                //             Icons.thumb_down_alt_outlined,
+                //           )
+                //         ],
+                //       )
               ],
             ),
           ),

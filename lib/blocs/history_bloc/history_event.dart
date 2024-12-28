@@ -8,9 +8,9 @@ sealed class HistoryEvent extends Equatable {
 }
 
 class LoadChatHistory extends HistoryEvent {
-  final String? userId;
+  final String userId;
 
-  const LoadChatHistory({this.userId});
+  const LoadChatHistory({required this.userId});
 }
 
 class SearchChat extends HistoryEvent {
@@ -24,6 +24,12 @@ class SearchChat extends HistoryEvent {
 
   @override
   List<Object> get props => super.props..addAll([query, userId]);
+}
+
+class ChatHistoryUpdated extends HistoryEvent {
+  final List<ChatModel> chatHistory;
+
+  const ChatHistoryUpdated({required this.chatHistory});
 }
 
 class DeleteChat extends HistoryEvent {

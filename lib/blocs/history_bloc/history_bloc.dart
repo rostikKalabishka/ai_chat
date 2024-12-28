@@ -50,15 +50,19 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     if (state is! HistoryLoadedState) {
       emit(HistoryLoadingState());
     }
-
     try {
       searchDebounce?.cancel();
+
+      final completer = Completer<void>();
       searchDebounce = Timer(const Duration(milliseconds: 300), () async {
         final history = await chatRepository.searchChat(
             userId: event.userId, query: event.query);
 
         emit(HistoryLoadedState(chatHistory: history));
+
+        completer.complete();
       });
+      await completer.future;
     } catch (e) {
       log(e.toString());
       emit(HistoryErrorState(error: e));

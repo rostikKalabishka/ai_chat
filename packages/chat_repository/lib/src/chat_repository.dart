@@ -24,7 +24,7 @@ class ChatRepository implements AbstractChatRepository {
       final dateTime = DateTime.now();
       final ChatModel chatModel = ChatModel(
         messages: [],
-        id: Uuid().v1(),
+        id: const Uuid().v1(),
         createAt: dateTime,
         updateAt: dateTime,
         chatName: '',
@@ -97,21 +97,19 @@ class ChatRepository implements AbstractChatRepository {
       ]);
 
       final updateUserMessage = userMessage.copyWith(
-          id: Uuid().v4(), createAt: DateTime.now(), isUser: true);
+          id: const Uuid().v4(), createAt: DateTime.now(), isUser: true);
 
       final responseMessage = Message(
           isUser: false,
           message: response.text ?? 'Don’t have data',
           createAt: dateTime,
-          id: Uuid().v4(),
+          id: const Uuid().v4(),
           likeMessage: false,
           dislikeMessage: false);
 
-      final updateChatModel = chatModel.copyWith(messages: [
-        ...chatModel.messages,
-        updateUserMessage,
-        responseMessage
-      ]);
+      final updateChatModel = chatModel.copyWith(
+          messages: [...chatModel.messages, updateUserMessage, responseMessage],
+          updateAt: DateTime.now());
 
       await updateChat(chatModel: updateChatModel);
 
@@ -179,7 +177,8 @@ class ChatRepository implements AbstractChatRepository {
     try {
       return _chatsCollection
           .where("userCreatorChat", isEqualTo: userId)
-          //  .orderBy('updateAt', descending: true)
+          .orderBy('updateAt', descending: true)
+          .orderBy('chatName', descending: false)
           .snapshots()
           .map((snapshot) {
         return snapshot.docs

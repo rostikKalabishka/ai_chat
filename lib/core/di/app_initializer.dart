@@ -11,7 +11,6 @@ import 'package:ai_chat/screens/settings/bloc/settings_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-//test
 class AppInitializer extends StatelessWidget {
   const AppInitializer({super.key, required this.child});
   final Widget child;

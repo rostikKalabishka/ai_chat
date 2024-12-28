@@ -12,6 +12,7 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   final ChatRepository chatRepository;
   StreamSubscription<List<ChatModel>>? _historySubscription;
   Timer? searchDebounce;
+
   HistoryBloc({required ChatRepository myChatRepository})
       : chatRepository = myChatRepository,
         super(HistoryInitial()) {
@@ -31,22 +32,14 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   }
 
   Future<void> _loadHistory(LoadChatHistory event, emit) async {
-    if (_historySubscription != null) {
-      _historySubscription!.cancel();
-    }
-    if (state is! HistoryLoadedState) {
-      emit(HistoryLoadingState());
-    }
-    try {
-      // final history =
-      //     await chatRepository.getHistoryCurrentUser(userId: event.userId!);
+    await _historySubscription?.cancel();
 
-      final history = await chatRepository
+    try {
+      _historySubscription = chatRepository
           .getHistoryStream(userId: event.userId)
           .listen((chatHistory) {
         add(ChatHistoryUpdated(chatHistory: chatHistory));
       });
-      // emit(HistoryLoadedState(chatHistory: history));
     } catch (e) {
       log(e.toString());
       emit(HistoryErrorState(error: e));
@@ -57,19 +50,15 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     if (state is! HistoryLoadedState) {
       emit(HistoryLoadingState());
     }
+
     try {
       searchDebounce?.cancel();
-
-      final completer = Completer<void>();
       searchDebounce = Timer(const Duration(milliseconds: 300), () async {
         final history = await chatRepository.searchChat(
             userId: event.userId, query: event.query);
 
         emit(HistoryLoadedState(chatHistory: history));
-
-        completer.complete();
       });
-      await completer.future;
     } catch (e) {
       log(e.toString());
       emit(HistoryErrorState(error: e));
@@ -93,5 +82,12 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
       log(e.toString());
       emit(HistoryErrorState(error: e));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _historySubscription?.cancel();
+    searchDebounce?.cancel();
+    return super.close();
   }
 }

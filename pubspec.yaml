@@ -60,6 +60,7 @@ dependencies:
   local_auth: ^2.1.8
   firebase_auth: ^5.3.0
   flutter_slidable: ^3.1.2
+  uuid: ^4.5.1
 
   firebase_core: ^3.5.0
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:chat_repository/chat_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:uuid/uuid.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
@@ -66,8 +67,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         emit(state.copyWith(chatModel: chat, chatId: chat.id));
       }
 
-      final Message userMessage = Message.emptyMessage
-          .copyWith(message: event.userMessage, createAt: DateTime.now());
+      final Message userMessage = Message.emptyMessage.copyWith(
+          message: event.userMessage,
+          createAt: DateTime.now(),
+          isUser: true,
+          id: const Uuid().v4());
 
       final oldChat = state.chatModel;
 

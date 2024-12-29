@@ -35,7 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _textFieldController = TextEditingController();
     _scrollController = ScrollController();
     focusNode = FocusNode();
-    log(widget.chatId.toString());
+
     _init();
 
     super.initState();

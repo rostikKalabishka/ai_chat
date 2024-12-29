@@ -62,7 +62,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                             );
                           } else {
                             historyBloc.add(
-                              SearchChat(query: value, userId: currentUser.id),
+                              SearchChat(
+                                  query: value.trim(), userId: currentUser.id),
                             );
                           }
                         },
@@ -102,7 +103,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                           .read<HistoryBloc>()
                                           .add(DeleteChat(chatId: chat.id));
                                     },
-                                    backgroundColor: Color(0xFFFE4A49),
+                                    backgroundColor: const Color(0xFFFE4A49),
                                     foregroundColor: Colors.white,
                                     icon: Icons.delete,
                                     label: S.of(context).delete,

@@ -96,9 +96,6 @@ class ChatRepository implements AbstractChatRepository {
         Content.multi([prompt])
       ]);
 
-      final updateUserMessage = userMessage.copyWith(
-          id: const Uuid().v4(), createAt: DateTime.now(), isUser: true);
-
       final responseMessage = Message(
           isUser: false,
           message: response.text ?? 'Don’t have data',
@@ -108,7 +105,7 @@ class ChatRepository implements AbstractChatRepository {
           dislikeMessage: false);
 
       final updateChatModel = chatModel.copyWith(
-          messages: [...chatModel.messages, updateUserMessage, responseMessage],
+          messages: [...chatModel.messages, userMessage, responseMessage],
           updateAt: DateTime.now());
 
       await updateChat(chatModel: updateChatModel);
@@ -136,8 +133,7 @@ class ChatRepository implements AbstractChatRepository {
     try {
       final querySnapshot = await _chatsCollection
           .where("userCreatorChat", isEqualTo: userId)
-          // .orderBy('updateAt', descending: true)
-          // .orderBy('createAt', descending: true)
+          .orderBy('updateAt', descending: true)
           .get();
 
       final historyData = querySnapshot.docs

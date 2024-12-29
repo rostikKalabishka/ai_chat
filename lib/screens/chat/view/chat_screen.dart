@@ -1,9 +1,10 @@
-import 'dart:developer';
+import 'dart:ui';
 
 import 'package:ai_chat/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:ai_chat/blocs/history_bloc/history_bloc.dart';
 import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
 import 'package:ai_chat/core/routes/router.dart';
+
 import 'package:ai_chat/core/ui/ui.dart';
 import 'package:ai_chat/generated/l10n.dart';
 import 'package:ai_chat/screens/chat/bloc/chat_bloc.dart';
@@ -15,6 +16,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 @RoutePage()
 class ChatScreen extends StatefulWidget {
@@ -29,6 +31,10 @@ class _ChatScreenState extends State<ChatScreen> {
   late TextEditingController _textFieldController;
   late ScrollController _scrollController;
   late FocusNode focusNode;
+
+  final SpeechToText _speechToText = SpeechToText();
+
+  bool _isListening = false;
 
   @override
   void initState() {
@@ -101,7 +107,6 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                       );
                     },
-                    // listener: (BuildContext context, S state) {},
                   ),
                 ),
               ],
@@ -160,6 +165,15 @@ class _ChatScreenState extends State<ChatScreen> {
                                       ),
                                     ),
                                     IconButton(
+                                        onPressed: _toggleListening,
+                                        icon: Icon(
+                                          _isListening == false
+                                              ? Icons.mic
+                                              : Icons.mic_off,
+                                          color:
+                                              _isListening ? Colors.red : null,
+                                        )),
+                                    IconButton(
                                         onPressed: () {
                                           _sendMessage(context);
                                         },
@@ -190,14 +204,14 @@ class _ChatScreenState extends State<ChatScreen> {
       if (focusNode.hasFocus) {
         focusNode.unfocus();
 
-        await Future.delayed(const Duration(milliseconds: 300));
+        await Future.delayed(const Duration(milliseconds: 300)).then((val) {
+          if (!mounted) return;
+
+          AutoRouter.of(context).push(
+            const SettingsRoute(),
+          );
+        });
       }
-
-      if (!mounted) return;
-
-      AutoRouter.of(context).push(
-        const SettingsRoute(),
-      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('User information is not available')),
@@ -205,19 +219,52 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
+//fix
+  Future<void> _toggleListening() async {
+    final deviceLocale = PlatformDispatcher.instance.locale;
+    // if (!_isListening) {
+    //   bool available = await _speechToText.initialize();
+    //   if (available) {
+    //     setState(() {
+    //       _isListening = true;
+    //     });
+    //     _speechToText.listen(
+    //       localeId: deviceLocale.languageCode,
+    //       onResult: (result) {
+    //         setState(() {
+    //           _textFieldController.text = '${result.recognizedWords} ';
+    //         });
+    //       },
+    //     );
+    //   }
+    // } else {
+    //   setState(() => _isListening = false);
+
+    //   _speechToText.stop();
+    // }
+  }
+
   void _sendMessage(BuildContext context) {
-    setState(() {
-      final newMessage = _textFieldController.text.trim();
+    final newMessage = _textFieldController.text.trim();
+
+    if (newMessage.isNotEmpty) {
+      context.read<ChatBloc>().add(SendMessageInChat(newMessage));
+
       _textFieldController.clear();
 
-      if (newMessage.isNotEmpty) {
-        context.read<ChatBloc>().add(SendMessageInChat(newMessage));
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
-    });
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+
+      // Оновлюємо стан після очищення текстового поля
+      // setState(() {
+      //   if (_isListening) {
+      //     _speechToText.stop();
+      //     _isListening = false;
+      //   }
+      // });
+    }
   }
 }

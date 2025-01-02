@@ -212,14 +212,12 @@ class _ChatScreenState extends State<ChatScreen> {
       if (focusNode.hasFocus) {
         focusNode.unfocus();
 
-        await Future.delayed(const Duration(milliseconds: 300)).then((val) {
-          if (!mounted) return;
-
-          AutoRouter.of(context).push(
-            const SettingsRoute(),
-          );
-        });
+        await Future.delayed(const Duration(milliseconds: 300));
       }
+
+      AutoRouter.of(context).push(
+        const SettingsRoute(),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('User information is not available')),

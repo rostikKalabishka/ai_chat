@@ -2,21 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-<key>CFBundleLocalizations</key>
-<array>
-	<string>en</string>
-	<string>ua</string>
-</array>
-<key>NSSpeechRecognitionUsageDescription</key>
-<string>Your app uses speech recognition to enhance the user experience.</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>Your app requires access to the microphone to record voice input.</string>
-<key>NSCameraUsageDescription</key>
-<string>Allow access to camera</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>Allow access to microphone for video recording</string>
-<key>NSPhotoLibraryUsageDescription</key>
-<string>Allow access to photo library</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -27,6 +14,11 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>ua</string>
+	</array>
 	<key>CFBundleName</key>
 	<string>ai_chat</string>
 	<key>CFBundlePackageType</key>
@@ -38,6 +30,16 @@
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow access to camera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Allow access to microphone for video recording</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow access to photo library</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Your app uses speech recognition to enhance the user experience.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -56,9 +58,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
 </dict>
 </plist>

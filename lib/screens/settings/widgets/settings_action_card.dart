@@ -28,10 +28,11 @@ class SettingsActionCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontSize: 18,
+              Flexible(
+                child: Text(
+                  title,
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(fontSize: 18, overflow: TextOverflow.ellipsis),
                 ),
               ),
               Padding(

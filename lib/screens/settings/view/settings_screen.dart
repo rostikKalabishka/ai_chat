@@ -73,43 +73,47 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: BlocBuilder<UserBloc, UserState>(
               builder: (context, state) {
                 final userModel = state.userModel;
-                return Column(
-                  spacing: 10,
-                  children: [
-                    GestureDetector(
-                      onTap: () => _uploadPicture(context, userModel),
-                      child: MyCircleAvatar(
-                        userImage: userModel.userImage,
-                        radius: 50,
+                return SingleChildScrollView(
+                  child: Column(
+                    spacing: 10,
+                    children: [
+                      GestureDetector(
+                        onTap: () => _uploadPicture(context, userModel),
+                        child: MyCircleAvatar(
+                          userImage: userModel.userImage,
+                          radius: 50,
+                        ),
                       ),
-                    ),
-                    SettingsActionCard(
-                        title: userModel.username, iconData: Icons.people_alt),
-                    SettingsActionCard(
-                        title: userModel.email, iconData: Icons.email),
-                    SettingsActionCard(
-                        title: _appInfoString ?? '', iconData: Icons.info),
-                    SettingsActionCard(
-                        title: '${S.of(context).usedModel} : $_userModel',
-                        iconData: Icons.computer),
-                    SettingsToggleCard(
-                      title: S.of(context).darkMode,
-                      value: isDarkTheme,
-                      onChanged: (value) => _setThemeBrightness(context, value),
-                    ),
-                    SettingsDropDownCard(
-                      title: S.of(context).language,
-                      selectedLocale: localizationState.locale,
-                    ),
-                    SettingsActionCard(
-                      title: S.of(context).signOut,
-                      iconData: Icons.login,
-                      iconColor: Colors.redAccent,
-                      onTap: () {
-                        _confirmSignOut(context);
-                      },
-                    ),
-                  ],
+                      SettingsActionCard(
+                          title: userModel.username,
+                          iconData: Icons.people_alt),
+                      SettingsActionCard(
+                          title: userModel.email, iconData: Icons.email),
+                      SettingsActionCard(
+                          title: _appInfoString ?? '', iconData: Icons.info),
+                      SettingsActionCard(
+                          title: '${S.of(context).usedModel} : $_userModel',
+                          iconData: Icons.computer),
+                      SettingsToggleCard(
+                        title: S.of(context).darkMode,
+                        value: isDarkTheme,
+                        onChanged: (value) =>
+                            _setThemeBrightness(context, value),
+                      ),
+                      SettingsDropDownCard(
+                        title: S.of(context).language,
+                        selectedLocale: localizationState.locale,
+                      ),
+                      SettingsActionCard(
+                        title: S.of(context).signOut,
+                        iconData: Icons.login,
+                        iconColor: Colors.redAccent,
+                        onTap: () {
+                          _confirmSignOut(context);
+                        },
+                      ),
+                    ],
+                  ),
                 );
               },
             ),

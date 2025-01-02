@@ -1,7 +1,7 @@
 import 'package:ai_chat/blocs/localization_bloc/localization_bloc.dart';
 import 'package:ai_chat/core/ui/ui.dart';
 import 'package:ai_chat/generated/l10n.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,7 +20,8 @@ class SettingsDropDownCard extends StatelessWidget {
     final theme = Theme.of(context);
     final supportedLocales = S.delegate.supportedLocales;
 
-    // if (theme.isAndroid) {
+    final isValidLocale = supportedLocales.contains(selectedLocale);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(bottom: 8),
       child: BaseContainer(
@@ -36,7 +37,7 @@ class SettingsDropDownCard extends StatelessWidget {
               ),
             ),
             DropdownButton<Locale>(
-              value: selectedLocale,
+              value: isValidLocale ? selectedLocale : null,
               underline: const SizedBox.shrink(),
               onChanged: (Locale? newLocale) {
                 if (newLocale != null) {

@@ -34,3 +34,14 @@ class SendMessageInChat extends ChatEvent {
   @override
   List<Object> get props => super.props..add(userMessage);
 }
+
+class CurrentVoiceListen extends ChatEvent {}
+
+class UpdateVoiceInput extends ChatEvent {
+  final String recognizedWords;
+
+  const UpdateVoiceInput(this.recognizedWords);
+
+  @override
+  List<Object> get props => [recognizedWords];
+}

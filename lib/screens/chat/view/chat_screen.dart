@@ -16,7 +16,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:speech_to_text/speech_to_text.dart';
 
 @RoutePage()
 class ChatScreen extends StatefulWidget {
@@ -31,10 +30,6 @@ class _ChatScreenState extends State<ChatScreen> {
   late TextEditingController _textFieldController;
   late ScrollController _scrollController;
   late FocusNode focusNode;
-
-  final SpeechToText _speechToText = SpeechToText();
-
-  bool _isListening = false;
 
   @override
   void initState() {
@@ -69,7 +64,15 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocBuilder<ChatBloc, ChatState>(
+    return BlocConsumer<ChatBloc, ChatState>(
+      listener: (BuildContext context, state) {
+        _textFieldController.text = state.currentVoiceInput;
+        if (state.currentVoiceInput.isNotEmpty) {
+          _textFieldController.selection = TextSelection.fromPosition(
+            TextPosition(offset: _textFieldController.text.length),
+          );
+        }
+      },
       builder: (BuildContext context, state) {
         return GestureDetector(
           onTap: () {
@@ -165,13 +168,18 @@ class _ChatScreenState extends State<ChatScreen> {
                                       ),
                                     ),
                                     IconButton(
-                                        onPressed: _toggleListening,
+                                        onPressed: () {
+                                          context
+                                              .read<ChatBloc>()
+                                              .add(CurrentVoiceListen());
+                                        },
                                         icon: Icon(
-                                          _isListening == false
+                                          state.isListening == false
                                               ? Icons.mic
                                               : Icons.mic_off,
-                                          color:
-                                              _isListening ? Colors.red : null,
+                                          color: state.isListening
+                                              ? Colors.red
+                                              : null,
                                         )),
                                     IconButton(
                                         onPressed: () {
@@ -219,31 +227,6 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-//fix
-  Future<void> _toggleListening() async {
-    final deviceLocale = PlatformDispatcher.instance.locale;
-    // if (!_isListening) {
-    //   bool available = await _speechToText.initialize();
-    //   if (available) {
-    //     setState(() {
-    //       _isListening = true;
-    //     });
-    //     _speechToText.listen(
-    //       localeId: deviceLocale.languageCode,
-    //       onResult: (result) {
-    //         setState(() {
-    //           _textFieldController.text = '${result.recognizedWords} ';
-    //         });
-    //       },
-    //     );
-    //   }
-    // } else {
-    //   setState(() => _isListening = false);
-
-    //   _speechToText.stop();
-    // }
-  }
-
   void _sendMessage(BuildContext context) {
     final newMessage = _textFieldController.text.trim();
 
@@ -257,14 +240,6 @@ class _ChatScreenState extends State<ChatScreen> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
       );
-
-      // Оновлюємо стан після очищення текстового поля
-      // setState(() {
-      //   if (_isListening) {
-      //     _speechToText.stop();
-      //     _isListening = false;
-      //   }
-      // });
     }
   }
 }

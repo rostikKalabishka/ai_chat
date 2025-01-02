@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:chat_repository/chat_repository.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:uuid/uuid.dart';
 
 part 'chat_event.dart';
@@ -10,15 +12,27 @@ part 'chat_state.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatRepository chatRepository;
+
+  final _speechToText = SpeechToText();
   Timer? searchDebounce;
   ChatBloc({required ChatRepository myChatRepository})
       : chatRepository = myChatRepository,
         super(const ChatState()) {
+    _initializeSpeechToText();
     on<ChatEvent>((event, emit) async {
       if (event is LoadChatInfo) {
         await _loadChatInfo(event, emit);
       } else if (event is SendMessageInChat) {
         await _sendMessage(event, emit);
+      } else if (event is CurrentVoiceListen) {
+        await _toggleListening(event, emit);
+      }
+    });
+    on<UpdateVoiceInput>((event, emit) {
+      if (event.recognizedWords.isNotEmpty) {
+        emit(state.copyWith(currentVoiceInput: event.recognizedWords));
+      } else {
+        emit(state.copyWith(currentVoiceInput: ''));
       }
     });
   }
@@ -44,7 +58,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           chatModel: ChatModel.emptyChatModel,
           userCreatorChatId: event.userId,
         ));
-        print(state.toString());
       }
     } catch (e) {
       emit(state.copyWith(error: e));
@@ -57,6 +70,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       emit(state.copyWith(chatPageState: LoadChatPageState.loading));
     }
     try {
+      if (_speechToText.isListening) {
+        _speechToText.stop();
+        emit(state.copyWith(
+          isListening: false,
+          currentVoiceInput: '',
+        ));
+      }
+
       final chatId = state.chatId;
       late final ChatModel chat;
       if (chatId != null && chatId.isNotEmpty) {
@@ -64,7 +85,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       } else {
         chat = await chatRepository.createChat(
             userCreatorChat: state.userCreatorChatId);
-        emit(state.copyWith(chatModel: chat, chatId: chat.id));
+        emit(state.copyWith(
+            chatModel: chat,
+            chatId: chat.id,
+            currentVoiceInput: '',
+            isListening: false));
       }
 
       final Message userMessage = Message.emptyMessage.copyWith(
@@ -79,18 +104,47 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           chatModel: state.chatModel
               .copyWith(messages: [...state.chatModel.messages, userMessage]),
           chatPageState: LoadChatPageState.loaded,
-          isTyping: true));
+          isTyping: true,
+          currentVoiceInput: '',
+          isListening: false));
 
       final Message response = await chatRepository.sendMessage(
           chatModel: oldChat, userMessage: userMessage);
 
-      emit(state.copyWith(
-          chatModel: state.chatModel
-              .copyWith(messages: [...state.chatModel.messages, response]),
-          chatPageState: LoadChatPageState.loaded,
-          isTyping: false));
+      emit(
+        state.copyWith(
+            chatModel: state.chatModel
+                .copyWith(messages: [...state.chatModel.messages, response]),
+            chatPageState: LoadChatPageState.loaded,
+            isTyping: false,
+            currentVoiceInput: '',
+            isListening: false),
+      );
     } catch (e) {
       emit(state.copyWith(error: e));
     }
+  }
+
+  Future<void> _toggleListening(CurrentVoiceListen event, emit) async {
+    try {
+      if (!state.isListening && _speechToText.isAvailable) {
+        emit(state.copyWith(isListening: true, currentVoiceInput: ''));
+        _speechToText.listen(
+          localeId: PlatformDispatcher.instance.locale.languageCode,
+          onResult: (result) {
+            add(UpdateVoiceInput(result.recognizedWords));
+          },
+        );
+      } else {
+        emit(state.copyWith(isListening: false));
+        _speechToText.stop();
+      }
+    } catch (e) {
+      emit(state.copyWith(error: e));
+    }
+  }
+
+  Future<void> _initializeSpeechToText() async {
+    await _speechToText.initialize();
   }
 }

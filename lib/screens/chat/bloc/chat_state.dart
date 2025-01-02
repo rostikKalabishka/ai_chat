@@ -7,6 +7,8 @@ class ChatState extends Equatable {
     this.error = '',
     this.chatId = '',
     this.isTyping = false,
+    this.isListening = false,
+    this.currentVoiceInput = '',
     this.chatPageState = LoadChatPageState.unknown,
     this.chatModel = ChatModel.emptyChatModel,
     this.userCreatorChatId = '',
@@ -16,6 +18,8 @@ class ChatState extends Equatable {
   final LoadChatPageState chatPageState;
 
   final ChatModel chatModel;
+  final bool isListening;
+  final String currentVoiceInput;
 
   final String? chatId;
   final bool isTyping;
@@ -28,7 +32,9 @@ class ChatState extends Equatable {
         chatModel,
         isTyping,
         userCreatorChatId,
-        chatId ?? ''
+        chatId ?? '',
+        isListening,
+        currentVoiceInput
       ];
 
   ChatState copyWith({
@@ -36,15 +42,19 @@ class ChatState extends Equatable {
     LoadChatPageState? chatPageState,
     ChatModel? chatModel,
     String? chatId,
+    bool? isListening,
     bool? isTyping,
     String? userCreatorChatId,
+    String? currentVoiceInput,
   }) {
     return ChatState(
         error: error ?? this.error,
         chatId: chatId ?? this.chatId,
+        isListening: isListening ?? this.isListening,
         chatPageState: chatPageState ?? this.chatPageState,
         chatModel: chatModel ?? this.chatModel,
         userCreatorChatId: userCreatorChatId ?? this.userCreatorChatId,
+        currentVoiceInput: currentVoiceInput ?? this.currentVoiceInput,
         isTyping: isTyping ?? this.isTyping);
   }
 }

@@ -37,7 +37,7 @@ class SettingsDropDownCard extends StatelessWidget {
               ),
             ),
             DropdownButton<Locale>(
-              value: isValidLocale ? selectedLocale : null,
+              value: isValidLocale ? selectedLocale : const Locale('en'),
               underline: const SizedBox.shrink(),
               onChanged: (Locale? newLocale) {
                 if (newLocale != null) {

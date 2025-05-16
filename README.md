@@ -23,7 +23,7 @@ cropper.
 
 ## Tech Stack
 
-**Firebase Auth**: Google Sign-In and user authentication
+**Firebase Auth**: User authentication
 
 **Firebase Core**: Core Firebase services integration
 

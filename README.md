@@ -24,13 +24,23 @@ cropper.
 ## Tech Stack
 
 **Firebase Auth**: Google Sign-In and user authentication
+
 **Firebase Core**: Core Firebase services integration
+
 **Google Generative AI**: Generates smart and natural responses
+
 **Bloc / flutter_bloc**: State management using the BLoC pattern
+
 **AutoRoute**: Declarative route navigation
+
 **GetIt**: Dependency injection
+
 **Shared Preferences**: Local storage for user settings
+
 **Speech to Text**: Converts user voice into text
+
 **Image Picker & Cropper**: Avatar selection and cropping
+
 **Flutter Dotenv**: Securely manage API keys via environment variables
+
 **UUID**: Unique ID generation for sessions and queries

@@ -1,0 +1,2 @@
+D:/FlutterProject/ai_chat/android/app/.cxx/RelWithDebInfo/w35u734x/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/FlutterProject/ai_chat/android/app/.cxx/RelWithDebInfo/w35u734x/arm64-v8a/CMakeFiles/rebuild_cache.dir

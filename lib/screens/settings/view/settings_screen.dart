@@ -135,7 +135,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       CroppedFile? croppedFile = await ImageCropper().cropImage(
         sourcePath: image.path,
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-        aspectRatioPresets: [CropAspectRatioPreset.square],
+
+        // aspectRatioPresets: [CropAspectRatioPreset.square],
         uiSettings: [
           AndroidUiSettings(
               toolbarTitle: 'Cropper',

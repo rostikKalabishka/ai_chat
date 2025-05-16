@@ -1,16 +1,28 @@
-# ai_chat
+# AI Chat App
 
-A new Flutter project.
+A Flutter-based conversational AI assistant powered by Google Generative AI. This application allows users to communicate with an intelligent chatbot using text or voice, view their query history, and benefit from prompt tuning to generate more accurate responses. Firebase is used for Google sign-in and secure user authentication.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+**AI-Powered Chat**: Smart responses using Google Generative AI with support for follow-up questions through prompt tuning.
+**Speech-to-Text**: Voice input powered by speech_to_text for hands-free interaction.
+**Multilingual Support**: App interface available in Ukrainian, English, and German.
+**Search History**: Previous queries are saved locally for easy access.
+**Prompt Tuning**: Enhances conversations by making AI ask clarifying questions when needed.
+**User Authentication**: Google sign-in with Firebase for secure access.
+**Avatar Customization**: Upload and crop profile pictures using image picker and cropper.
+**Persistent Storage**: User settings and history are stored locally using Shared Preferences.
 
-A few resources to get you started if this is your first Flutter project:
+## Tech Stack
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**Firebase Auth**: Google Sign-In and user authentication
+**Firebase Core**: Core Firebase services integration
+**Google Generative AI**: Generates smart and natural responses
+**Bloc / flutter_bloc**: State management using the BLoC pattern
+**AutoRoute**: Declarative route navigation
+**GetIt**: Dependency injection
+**Shared Preferences**: Local storage for user settings
+**Speech to Text**: Converts user voice into text
+**Image Picker & Cropper**: Avatar selection and cropping
+**Flutter Dotenv**: Securely manage API keys via environment variables
+**UUID**: Unique ID generation for sessions and queries

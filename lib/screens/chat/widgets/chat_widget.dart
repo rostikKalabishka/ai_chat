@@ -1,6 +1,8 @@
 import 'package:ai_chat/blocs/user_bloc/user_bloc.dart';
 import 'package:ai_chat/core/ui/assets_manager/assets_manager.dart';
 import 'package:ai_chat/core/ui/ui.dart';
+import 'package:ai_chat/core/ui/widgets/typer_with_bold_text.dart';
+import 'package:ai_chat/core/utils/helpers/markdown_text_parser.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +19,11 @@ class ChatWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentUser = context.read<UserBloc>().state.userModel;
+    final wasSeen = seenMessages.contains(message);
+    if (!wasSeen && !isUser) {
+      seenMessages.add(message);
+    }
+
     final theme = Theme.of(context);
     return Column(
       children: [
@@ -44,19 +51,13 @@ class ChatWidget extends StatelessWidget {
                           label: message,
                           color: theme.textTheme.titleSmall?.color,
                         )
-                      : DefaultTextStyle(
-                          style: TextStyle(
-                              color: theme.textTheme.titleSmall?.color,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
-                          child: AnimatedTextKit(
-                              isRepeatingAnimation: false,
-                              repeatForever: true,
-                              displayFullTextOnTap: true,
-                              totalRepeatCount: 1,
-                              animatedTexts: [
-                                TyperAnimatedText(message.trim())
-                              ]),
+                      : TyperWithBoldText(
+                          message: message.trim(),
+                          shouldAnimate: !wasSeen,
+                          textStyle: TextStyle(
+                            color: theme.textTheme.headlineLarge?.color,
+                            fontSize: 18,
+                          ),
                         ),
                 ),
                 // isUser
